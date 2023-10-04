@@ -1,0 +1,14 @@
+<html>
+    <head>
+        <script>
+            function logout()
+            {
+                localStorage.removeItem("userDetails");
+                window.location.assign("ganesh-finance.html");
+            }
+        </script>
+    </head>
+    <body>
+        <button type="button" class="btn btn-primary" id="login"  onclick="logout()">Logout</button>
+    </body>
+</html>

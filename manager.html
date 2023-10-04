@@ -1,0 +1,167 @@
+<html>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <head>
+        <style>
+            .heading{
+                display :flex;
+                justify-content: space-between;
+            }
+            .tdata
+            {
+                cursor: pointer;
+            }
+        </style>
+        <script>
+            function cancelLoan(applicationnumber,role,id)
+            {
+                alert(id);
+            }
+        </script>
+    </head>
+    <body>
+        <div class="heading">
+            <span id="uname"></span>
+            
+            <button type="button" class="btn btn-info btn-lg" id="apply"  onclick="logout()"><span class="glyphicon glyphicon-log-out"></span>Logout</button>
+        </div>
+        <div>
+            <div>
+                <select id="loanType" onchange="updateTable()">
+                    <option value="0" selected>ALL</option>
+                    <option value="1">Home Loan</option>
+                    <option value="2">Education Loan</option>
+                    <option value="3">Gold Loan</option>
+                </select>
+                
+            </div>
+            <div>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Loan ID</th>
+                        <th>Loan Ammount</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                       
+                    </tr>
+                    <tbody id="tabdata">
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <dialog id="Dialog1">
+
+        </dialog>
+    </body>
+    <script>
+        if(localStorage.getItem("userDetails")!= null)
+        {
+        var  localstorageData= JSON.parse(localStorage.getItem("userDetails"));
+        if(localstorageData["role"] ==0){
+        document.getElementById("uname").innerHTML=`${localstorageData["username"]}`;
+        
+
+        let xmlhttp=new XMLHttpRequest();
+        let url="http://localhost:8080/loanApplication/all";
+        xmlhttp.open("GET",url);
+        xmlhttp.send();
+        xmlhttp.onload=function()
+        {
+           let data=JSON.parse(xmlhttp.responseText);
+           showData(data);
+        }
+        
+            function updateTable()
+            {
+
+                let optionSelected=document.getElementById("loanType").value;
+                if (optionSelected==0){
+                    var url="http://localhost:8080/loanApplication/all";
+                }else{
+                    url=`http://localhost:8080/loanApplication/type/${optionSelected}`;
+                }
+                xmlhttp.open("GET",url);
+                xmlhttp.send();
+                xmlhttp.onload=function()
+                {
+                    let tableData=JSON.parse(xmlhttp.responseText);
+                    console.log(tableData);
+                    showData(tableData);
+
+                    
+                }
+            }
+            function objs(name,n)
+            {
+                this.name=name;
+                this.n=n;
+            }
+            function showData(data)
+            {
+                var t=document.getElementById("tabdata");
+                t.innerHTML="";
+                for(var i=0;i<data.length;i++){
+                let status="";
+                switch(data[i].application_status)
+                {
+                    case 0: status="Pending";break;
+                    case 1: status="Approved";break;
+                    case 2: status="Rejected";break;
+                    case 3: status="Cancelled";break;
+                    case 4: status="Topup Pending";break;
+                }
+               
+                    let type="";
+                    switch(data[i].loan_type)
+                    {
+                        case 3: type="Gold Loan";break;
+                        case 1: type="HomeLoan";break;
+                        case 2: type="Education Loan";break;
+                        
+                    }
+                   
+                   var ele=`<tr id=${data[i].loan_application_number} class="tdata" onclick="openDialogLoanApp(${data[i]})"><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td></tr> `;
+                    // if(!data[i].application_status)
+                    // {
+                    //    ele +=` <td> <button type="button" class="btn btn-primary" id="apply"  onclick="cancelLoan('${data[i].loan_application_number}',${localstorageData["role"]},'${localstorageData["id"]}')">Cancel Loan</button> </td></tr>`
+                    // }
+                    // else{
+                    //     ele+=`<td>Cannot cancel</td></tr>`;
+                    // }
+                    t.innerHTML+=ele;
+                    //console.log(data[i]);
+                
+            }
+            }
+        }
+        else{
+            window.location.assign(localstorageData["role"] == 1?"clerk.html":"customer.html");
+        }
+        }
+//{applicationnumber,clerkId,csutomerId,loanType,applicationStatus,loanTenure,applicationDate,roi,requestedAmount}
+        function openDialogLoanApp(d)
+        {  
+            console.log(JSON.stringify(d));
+            let dialog=document.getElementById("Dialog1");
+            dialog.innerHTML=`
+            <table class="table table-bordered" >
+                <tr>Loan Aplication Number</tr>
+                <tr>Requested Amount</tr>
+                <tr>Application Date</tr>
+                <tr>Loan Tenure</tr>
+                <tr>Loan Type</tr>
+                <tr>Customer ID</tr>
+            </table>
+            `;
+            dialog.open=true;
+        }
+        function logout()
+        {
+                localStorage.removeItem("userDetails");
+                window.location.assign("ganesh-finance.html");
+        }
+</script>
+</html>
