@@ -1,0 +1,42 @@
+.heading
+{
+    background:#f4511e;
+    height: 8vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+   
+
+}
+body{
+    margin-bottom: 100px;
+}
+ .title
+{
+    padding-left: 2vw;
+    font-size: 6vh;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    width: fit-content;
+    box-sizing: border-box;
+}
+
+.options
+{
+   width: 65vw;
+   display: flex;
+   justify-content: space-evenly;
+}
+.options a{
+  text-decoration: none;
+  color: black;
+}
+.loginForm
+{
+    height: 80vh;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   
+}
