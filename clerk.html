@@ -210,6 +210,30 @@
     </div>
     <div id="loanaccount">
       Loan Account
+
+
+      <div>
+        <select id="loanType2" onchange="updateLoanAccountTable()">
+          <option value="0" selected>ALL</option>
+          <option value="1">Home Loan</option>
+          <option value="2">Education Loan</option>
+          <option value="3">Gold Loan</option>
+        </select>
+      </div>
+      
+      <div>
+        <table class="table table-bordered">
+          <tr>
+            <th>Loan Application Number</th>
+            <th>Loan Ammount</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Cancel</th>
+          </tr>
+          <tbody id="loanaccountdata"></tbody>
+        </table>
+      </div>
     </div>
 
 
@@ -318,12 +342,18 @@
   </body>
   <script>
     if (localStorage.getItem("userDetails") != null) {
-      var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
-      document.getElementById(
-        "uname"
-      ).innerHTML = `${localstorageData["username"]}`;
+      var  localstorageData= JSON.parse(localStorage.getItem("userDetails"));
+        
+      if(localstorageData["role"] ==1){
+          var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
+          document.getElementById("uname").innerHTML = `${localstorageData["username"]}`;
+      }else{
+            window.location.assign(localstorageData["role"] == 0?"manager.html":"customer.html");
+      }
     }
-
+    else{
+      window.location.assign("login.html");
+    }
     function applyLoanDialog() {
      
       let user = JSON.parse(localStorage.getItem("userDetails"));
@@ -392,7 +422,7 @@
     xmlhttp.send();
     xmlhttp.onload = function () {
       let data = JSON.parse(xmlhttp.responseText);
-      showData(data);
+      showData(data,"tabdata");
     };
     function closeDialog(dialog) {
       document.getElementById("applyLoanDialog").style.display = "none";
@@ -405,21 +435,26 @@
 
         var url = `http://localhost:8080/loanApplication/branch/${branchcode}`;
       } else {
-        url = `http://localhost:8080/loanApplication/type/${optionSelected}`;
+        url = `http://localhost:8080/loanApplication/branch/${branchcode}`;
+        
       }
       xmlhttp.open("GET", url);
       xmlhttp.send();
       xmlhttp.onload = function () {
         let tableData = JSON.parse(xmlhttp.responseText);
         console.log(tableData);
-        showData(tableData);
+        if(optionSelected !=0 ){
+          tableData = tableData.filter(function(t){ return t.loan_type ==optionSelected ;});
+        }
+         console.log(tableData);
+        showData(tableData,"tabdata");
       };
     }
 
 
 
-    function showData(data) {
-      var t = document.getElementById("tabdata");
+    function showData(data,id) {
+      var t = document.getElementById(id);
       t.innerHTML = "";
       for (var i = 0; i < data.length; i++) {
         let status = "";
@@ -515,10 +550,19 @@
             console.log(receivedData);
         }
     }
-    function logout()
+    
+        function logout()
         {
                 localStorage.removeItem("userDetails");
                 window.location.assign("ganesh-finance.html");
         }
+        /* Loan account details fetch api requests part in js*/
+        function updateLoanAccountTable()
+        {
+
+        }
+
+
+
  </script>
 </html>

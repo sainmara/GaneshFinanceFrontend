@@ -15,6 +15,16 @@
     <link rel="stylesheet" href="project-finance.css" />
 
     <script>
+
+        var  localstorageData= JSON.parse(localStorage.getItem("userDetails"));
+        if(localStorage.getItem("userDetails") != null)
+        {
+            
+            console.log("ok");
+            window.location.assign(localstorageData["role"] == 0?"manager.html":"clerk.html");
+        
+        }
+
       function validateUname() {
         let uname = document.getElementById("username").value;
         if (!uname.length) {
@@ -86,9 +96,7 @@
               }
             };
           }
-        } else {
-          //todo
-        }
+        } 
       }
     </script>
   </head>

@@ -149,6 +149,7 @@
         {
         var  localstorageData= JSON.parse(localStorage.getItem("userDetails"));
         if(localstorageData["role"] ==0){
+
         document.getElementById("uname").innerHTML=`${localstorageData["username"]}`;
         
 
@@ -270,6 +271,9 @@
         else{
             window.location.assign(localstorageData["role"] == 1?"clerk.html":"customer.html");
         }
+        }
+        else{
+            window.location.assign("login.html");
         }
             //{applicationnumber,clerkId,csutomerId,loanType,applicationStatus,loanTenure,applicationDate,roi,requestedAmount}
         function openDialogLoanApp(applicationNumber,trid)

@@ -1,19 +1,150 @@
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="project-finance.css">
-    </head>
-    <body>
-        <div class="heading">
-           <span class="title">Ganesh Finance</span>
-           <div class="options">
-                <span><a href="ganesh-finance.html">Home</a></span>
-                <span><a href="emiCalc.html">EMI Calculator</a></span>
-                <span><a href="login.html">Login</a></span>
-           </div>
-        </div>
-        <div class="main">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="project-finance.css" />
+
+    <script>
+
+        var  localstorageData= JSON.parse(localStorage.getItem("userDetails"));
+        if(localStorage.getItem("userDetails") != null)
+        {
             
+            console.log("ok");
+            window.location.assign(localstorageData["role"] == 0?"manager.html":"clerk.html");
+        
+        }
+
+      function validateUname() {
+        let uname = document.getElementById("username").value;
+        if (!uname.length) {
+          document.getElementById(
+            "errmsgUname"
+          ).innerHTML = `<span style="color: red;">Username cannot be empty</span>`;
+        } else {
+          document.getElementById("errmsgUname").innerHTML = ``;
+        }
+      }
+      function validatepassword() {
+        let password = document.getElementById("password").value;
+        if (!password.length) {
+          document.getElementById(
+            "errmsgpwd"
+          ).innerHTML = `<span style="color: red;">Password cannot be empty</span>`;
+        } else {
+          document.getElementById("errmsgpwd").innerHTML = ``;
+        }
+      }
+      function userlogin(username, password) {
+        this.username = username;
+        this.password = password;
+      }
+      function storeData(uname, jwttoken, role, id,branchCode) {
+        this.username = uname;
+        this.token = jwttoken;
+        this.role = role;
+        this.id = id;
+        this.branchCode=branchCode;
+      }
+      function validateDetails() {
+        if (localStorage.getItem("userDetails") == null) {
+          let uname = document.getElementById("username").value;
+          let password = document.getElementById("password").value;
+          if (uname.length != 0 && password.length != 0) {
+            let xmlhttp = new XMLHttpRequest();
+            let url = "http://localhost:8080/Authentication/login";
+            xmlhttp.open("POST", url);
+            let data = JSON.stringify(new userlogin(uname, password));
+            xmlhttp.setRequestHeader("content-type", "application/json");
+
+            xmlhttp.send(data);
+            xmlhttp.onload = function () {
+              let data = JSON.parse(xmlhttp.responseText);
+
+              if (xmlhttp.status == "404") {
+                console.log(" resource not exists");
+              }
+              if (data["statusCode"] != 404) {
+                let info = new storeData(
+                  data["username"],
+                  data["role"],
+                  data["role"],
+                  data["empcustid"],data["branchCode"]
+                );
+                localStorage.setItem("userDetails", JSON.stringify(info));
+                if (data["role"] == 0) {
+                  window.location.assign("manager.html");
+                } else if (data["role"] == 1) {
+                  window.location.assign("clerk.html");
+                } else if (data["role"] == 2) {
+                  window.location.assign("customer.html");
+                }
+              } else {
+                document.getElementById(
+                  "errmsgpwd"
+                ).innerHTML = `<span style="color: red;">${data["error"]}</span>`;
+              }
+            };
+          }
+        } 
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="heading">
+      <span class="title">Ganesh Finance</span>
+      <div class="options">
+        <span><a href="ganesh-finance.html">Home</a></span>
+        <span><a href="emiCalc.html">EMI Calculator</a></span>
+        <span><a href="ganesh-finance.html">Login</a></span>
+      </div>
+    </div>
+    <div class="loginForm">
+      <div>
+        <div class="mb-3">
+          <label for="username" class="form-label">username</label>
+          <input
+            type="text"
+            class="form-control"
+            id="username"
+            aria-describedby="emailHelp"
+            onblur="validateUname()"
+          />
+          <span id="errmsgUname"></span>
         </div>
-    </body>
+        <div class="mb-3">
+          <label for="password" class="form-label">password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            aria-describedby="emailHelp"
+            onblur="validatepassword()"
+          />
+          <span id="errmsgpwd"></span>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary"
+          id="login"
+          onclick="validateDetails()"
+        >
+          Login
+        </button>
+        <span id="errmsg"></span>
+      </div>
+    </div>
+  </body>
 </html>

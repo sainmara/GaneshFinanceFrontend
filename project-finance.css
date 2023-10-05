@@ -5,6 +5,7 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
+  margin-bottom: 5px;
 }
 body {
   margin-bottom: 100px;
