@@ -5,6 +5,7 @@
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
     crossorigin="anonymous"
   />
+  <link rel="stylesheet" href="project-finance.css"/>
   <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -15,31 +16,175 @@
       .applyLoanTable {
         width: 300px;
       }
-
-      .heading {
-        display: flex;
-        justify-content: space-between;
+      #loanapplications
+      {
+        display: none;
       }
+      #loanaccount
+      {
+        display: none;
+      }
+      
+      /* dialog box css start */
+
+      #applyLoanDialog
+      {
+        margin: auto;
+        display: none;
+      }
+      
+      /* end of dialog box cs */
+
+      /* emicalculator css strat */
+              *{
+                    padding: 0;
+                    margin: 0;
+                    box-sizing: border-box;
+                }
+                #emicalc
+                {
+                  display: none;
+                }
+                .main{
+                    width: 540px;
+                    background: #ffffff;
+                    padding: 20px 25px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 60px rgba(1, 0, 5, 0.15);
+                  
+
+                }
+
+                .main h2{
+                    font-size: 28px;
+                    font-weight: 700;
+                }
+
+                
+
+                .main .calculator{
+                    position: relative;
+                    flex-direction: row;
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-around;
+                    padding: 10px 0px;
+                }
+
+
+                .calculator .calculator-input{
+                    position: relative;
+                    width: 50%;
+                    justify-content: space-around;
+                    padding: 5px 10px;
+                    display: block;
+                }
+
+                .calculator .calculator-input input{
+                    width: 100%;
+                    height: 40px;
+                    padding: 20px 14px;
+                    font-family: "Poppins",sans-serif;
+                    font-weight: 400;
+                    font-size: 18px;
+                    border: 1px solid #7d7d7d;
+                    border-radius: 4px;
+                }
+
+                .calculator .calculator-input input:focus{
+                    outline: none;
+                    border: 1px solid #f4511e;
+                }
+
+
+                .calculator .calculator-input label{
+                    color:#f4511e;
+                    font-size: 16px;
+                    padding: 2px 4px;
+                    font-weight: 500;
+                }
+
+                .calculator .calculator-input button {
+                    width: 100%;
+                    padding: 14px 16px;
+                    margin-top: 20px;
+                    font-weight: 700;
+                    cursor: pointer;
+                    background: orange;
+                    border: 0;
+                    color: #FFFFFF;
+                    font-size: 14px;
+                    text-transform: uppercase;
+                    border-radius: 4px;
+                }
+                .main .calculator-result{
+                    position: relative;
+                    display: block;
+                    padding: 10px;
+                    margin: 20px 0;
+                }
+                .main .calculator-result ul{
+                    width: 100%;
+                    background: #ff6f43;
+                    padding: 10px 15px;
+                    border-radius: 5px;
+                }
+
+                .main .calculator-result li{
+                    list-style: none;
+                    line-height: 28px;
+                    font-weight: 500;
+                    font-size: 18px;
+                }
+
+
+                .calculator-result .loan_emi,
+                .calculator-result .loan_principle,
+                .calculator-result .loan_interest_rate,
+                .calculator-result .loan_total{
+                    color: #333332;
+                    font-weight: 700;
+                    font-size: 22px;
+                }
+
+                .calculator-result canvas{
+                    padding: 20px;
+                }
+                /* end of emicalc css */
+
+                /* home page css*/
+                #home
+                {
+                  /* display: none; */
+                }
     </style>
     <script>
-      function cancelLoan(applicationnumber, role, id) {
-        alert(id);
-      }
+     
     </script>
   </head>
   <body>
     <div class="heading">
+      <span class="title">Ganesh Finance</span>
       <span id="uname"></span>
-      <button
-        type="button"
-        class="btn btn-primary"
-        id="apply"
-        onclick="applyLoanDialog()"
-      >
-        Apply New Loan
-      </button>
+      <div class="options">
+        <span><a href="#" onclick="showme('home')">Home</a></span>
+        <span><a href="#emicalculator" onclick="showme('emicalc')">EMI Calculator</a></span>
+        <span><a href="#" onclick="showme('loanapplications')">Loan Applications</a></span>
+        <span><a href="#" onclick="showme('loanaccount')"">Loan Account</a></span>
+          <button
+          type="button"
+          class="btn"
+          id="apply"
+          onclick="showme('applyLoanDialog')"
+         
+          >
+          Apply New Loan
+        </button>
+        <button type="button" class="btn logoutbtn" id="apply"  onclick="logout()">Logout</button>
+      </div>
     </div>
-    <div>
+    <div id="home"> Home</div>
+    <div id="loanapplications">
       <div>
         <select id="loanType" onchange="updateTable()">
           <option value="0" selected>ALL</option>
@@ -48,74 +193,11 @@
           <option value="3">Gold Loan</option>
         </select>
       </div>
-      <dialog id="applyLoanDialog">
-        <div class="applyLoanClass">
-          <button
-            type="button"
-            class="btn-close"
-            aria-label="Close"
-            onclick="closeDialog()"
-          ></button>
-          <table id="applyLoanTable">
-            <tbody id="applyLoanForm"></tbody>
-            <tr>
-              <td>Customer Id:</td>
-              <td>
-                <input type="text" id="inputCustomerId" required />
-              </td>
-            </tr>
-            <tr>
-              <td>Clerk Id:</td>
-              <td>
-                <input type="text" readonly id="inputClerkId" required />
-              </td>
-            </tr>
-            <tr>
-              <td>Loan Type:</td>
-              <td>
-                <select id="inputLoanType">
-                  <option value="1">Home Loan</option>
-                  <option value="2">Education Loan</option>
-                  <option value="3">Gold Loan</option>
-                </select>
-              </td>
-            </tr>
-            <tr>
-              <td>Loan Tenure:</td>
-              <td>
-                <input type="number" id="inputLoanTenure" required />
-              </td>
-            </tr>
-            <tr>
-              <td>Rate of Interest:</td>
-              <td>
-                <input type="number" id="inputRoi" required />
-              </td>
-            </tr>
-            <tr>
-              <td>Requested Amount:</td>
-              <td>
-                <input type="text" id="inputRequestedAmount" required />
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>
-                <input
-                  type="button"
-                  id="buttonApplyLoan"
-                  onclick="applyLoan()"
-                  value="Apply"
-                />
-              </td>
-            </tr>
-          </table>
-        </div>
-      </dialog>
+      
       <div>
         <table class="table table-bordered">
           <tr>
-            <th>Loan ID</th>
+            <th>Loan Application Number</th>
             <th>Loan Ammount</th>
             <th>Date</th>
             <th>Type</th>
@@ -125,6 +207,113 @@
           <tbody id="tabdata"></tbody>
         </table>
       </div>
+    </div>
+    <div id="loanaccount">
+      Loan Account
+    </div>
+
+
+    <!-- dialog box for apply-->
+    <div id="applyLoanDialog">
+      <div class="applyLoanClass">
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          onclick="closeDialog()"
+        ></button>
+        <table id="applyLoanTable">
+          <tbody id="applyLoanForm"></tbody>
+          <tr>
+            <td>Customer Id:</td>
+            <td>
+              <input type="text" id="inputCustomerId" required />
+            </td>
+          </tr>
+          <tr>
+            <td>Clerk Id:</td>
+            <td>
+              <input type="text" readonly id="inputClerkId" required />
+            </td>
+          </tr>
+          <tr>
+            <td>Loan Type:</td>
+            <td>
+              <select id="inputLoanType">
+                <option value="1">Home Loan</option>
+                <option value="2">Education Loan</option>
+                <option value="3">Gold Loan</option>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>Loan Tenure:</td>
+            <td>
+              <input type="number" id="inputLoanTenure" required />
+            </td>
+          </tr>
+          <tr>
+            <td>Rate of Interest:</td>
+            <td>
+              <input type="number" id="inputRoi" required />
+            </td>
+          </tr>
+          <tr>
+            <td>Requested Amount:</td>
+            <td>
+              <input type="text" id="inputRequestedAmount" required />
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>
+              <input
+                type="button"
+                id="buttonApplyLoan"
+                onclick="applyLoan()"
+                value="Apply"
+              />
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <!-- dialog for apply loan end-->
+    <!-- emi calculator part start -->
+    
+      <div class="main" id="emicalc">
+            
+        <h2>EMI Calculator</h2>
+        
+        <div class="calculator">
+            <div class="calculator-input">
+                <label for="">Loan Amount (Rs.):</label>
+                <input type="number" id="loan_amount">
+            </div>
+            <div class="calculator-input">
+                <label for="">Loan Tenure (Year.):</label>
+                <input type="number" id="loan_tenure">
+            </div>
+            <div class="calculator-input">
+                <label for="">Interest Rate (%):</label>
+                <input type="number" id="loan_interest">
+            </div>
+            <div class="calculator-input">
+                <button class="calculator-btn">Calculate EMI</button>
+            </div>
+        </div>
+
+        <div class="calculator-result">
+            <!---Canvas-->
+            <canvas id="loanChart"></canvas>
+            <ul>
+                <li>Monthly Loan EMI: <span class="loan_emi"></span></li>
+                <li>Principle Amount: <span class="loan_principle"></span></li>
+                <li>Loan on Interest: <span class="loan_interest_rate"></span></li>
+                <li>Total Amount to be paid: <span class="loan_total"></span></li>
+            </ul>
+        </div>
+    
     </div>
   </body>
   <script>
@@ -136,10 +325,11 @@
     }
 
     function applyLoanDialog() {
-      document.getElementById("applyLoanDialog").open = true;
-      let user = localStorage.getItem("userDetails");
-      console.log(user);
-      document.getElementById("inputClerkId").value = JSON.parse(user).id;
+     
+      let user = JSON.parse(localStorage.getItem("userDetails"));
+      
+      if(user.role==1)
+      document.getElementById("inputClerkId").value = user.id;
     }
 
     function applyLoan() {
@@ -192,10 +382,12 @@
         let responseText = xmlhttp.responseText;
         console.log(JSON.parse(responseText));
       };
-    }
 
+    }// close applyloan method
+    let user = JSON.parse(localStorage.getItem("userDetails"));
+      let branchcode =user.branchCode ;
     let xmlhttp = new XMLHttpRequest();
-    let url = "http://localhost:8080/loanApplication/all";
+    let url =`http://localhost:8080/loanApplication/branch/${branchcode}`;
     xmlhttp.open("GET", url);
     xmlhttp.send();
     xmlhttp.onload = function () {
@@ -203,12 +395,15 @@
       showData(data);
     };
     function closeDialog(dialog) {
-      document.getElementById("applyLoanDialog").open = false;
+      document.getElementById("applyLoanDialog").style.display = "none";
     }
     function updateTable() {
+      let user = JSON.parse(localStorage.getItem("userDetails"));
+      let branchcode =user.branchCode ;
       let optionSelected = document.getElementById("loanType").value;
       if (optionSelected == 0) {
-        var url = "http://localhost:8080/loanApplication/all";
+
+        var url = `http://localhost:8080/loanApplication/branch/${branchcode}`;
       } else {
         url = `http://localhost:8080/loanApplication/type/${optionSelected}`;
       }
@@ -220,6 +415,9 @@
         showData(tableData);
       };
     }
+
+
+
     function showData(data) {
       var t = document.getElementById("tabdata");
       t.innerHTML = "";
@@ -259,11 +457,68 @@
         var ele = `<tr id=${data[i].loan_application_number}><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td> `;
         if (!data[i].application_status) {
           ele += ` <td> <button type="button" class="btn btn-primary" id="apply"  onclick="cancelLoan('${data[i].loan_application_number}',${localstorageData["role"]},'${localstorageData["id"]}')">Cancel Loan</button> </td></tr>`;
-        } else {
+        } else if(data[i].application_status== 3)  {
+          ele += `<td>Cancelled</td></tr>`;
+        }
+        else{
           ele += `<td>Cannot cancel</td></tr>`;
         }
         t.innerHTML += ele;
       }
     }
-  </script>
+    var navbarids=["loanapplications","loanaccount","emicalc","home","applyLoanDialog"]
+    // function for nav bar to nacigate between multiple tabs in navbar
+    function showme(id)
+    { 
+      if(id == "applyLoanDialog")
+      {
+        applyLoanDialog();
+      }
+
+        navbarids.forEach(ele =>
+        {
+          if(ele != id)
+          {
+            document.getElementById(ele).style.display="none";
+          }
+        });
+        document.getElementById(id).style.display="block";
+          
+
+
+    }
+
+    /* Cancel loan part*/
+
+    function cancelLoanDetails(role,id,loan_application_number)
+    {
+      this.loan_application_id = loan_application_number;
+      this.role=role;
+      this.id=id;
+    }
+    function cancelLoan(applicationnumber, role, id) {
+        
+        
+        let sendingData = new cancelLoanDetails(role,id,applicationnumber);
+        //console.log(sendingData);
+        let xmlhttp = new XMLHttpRequest();
+        let url="http://localhost:8080/loanApplication/cancel";
+
+        xmlhttp.open("POST",url);
+        xmlhttp.setRequestHeader("content-type","application/json");
+
+        xmlhttp.send(JSON.stringify(sendingData));
+        xmlhttp.onload=function ()
+        {
+            let receivedData=JSON.parse(xmlhttp.responseText);
+
+            console.log(receivedData);
+        }
+    }
+    function logout()
+        {
+                localStorage.removeItem("userDetails");
+                window.location.assign("ganesh-finance.html");
+        }
+ </script>
 </html>

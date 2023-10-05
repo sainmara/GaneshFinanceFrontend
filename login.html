@@ -39,11 +39,12 @@
         this.username = username;
         this.password = password;
       }
-      function storeData(uname, jwttoken, role, id) {
+      function storeData(uname, jwttoken, role, id,branchCode) {
         this.username = uname;
         this.token = jwttoken;
         this.role = role;
         this.id = id;
+        this.branchCode=branchCode;
       }
       function validateDetails() {
         if (localStorage.getItem("userDetails") == null) {
@@ -68,7 +69,7 @@
                   data["username"],
                   data["role"],
                   data["role"],
-                  data["empcustid"]
+                  data["empcustid"],data["branchCode"]
                 );
                 localStorage.setItem("userDetails", JSON.stringify(info));
                 if (data["role"] == 0) {
