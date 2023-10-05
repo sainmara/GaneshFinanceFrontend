@@ -1,14 +1,269 @@
 <html>
-    <head>
-        <script>
-            function logout()
-            {
-                localStorage.removeItem("userDetails");
-                window.location.assign("ganesh-finance.html");
-            }
-        </script>
-    </head>
-    <body>
-        <button type="button" class="btn btn-primary" id="login"  onclick="logout()">Logout</button>
-    </body>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
+  />
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+  <head>
+    <style>
+      .applyLoanTable {
+        width: 300px;
+      }
+
+      .heading {
+        display: flex;
+        justify-content: space-between;
+      }
+    </style>
+    <script>
+      function cancelLoan(applicationnumber, role, id) {
+        alert(id);
+      }
+    </script>
+  </head>
+  <body>
+    <div class="heading">
+      <span id="uname"></span>
+      <button
+        type="button"
+        class="btn btn-primary"
+        id="apply"
+        onclick="applyLoanDialog()"
+      >
+        Apply New Loan
+      </button>
+    </div>
+    <div>
+      <div>
+        <select id="loanType" onchange="updateTable()">
+          <option value="0" selected>ALL</option>
+          <option value="1">Home Loan</option>
+          <option value="2">Education Loan</option>
+          <option value="3">Gold Loan</option>
+        </select>
+      </div>
+      <dialog id="applyLoanDialog">
+        <div class="applyLoanClass">
+          <button
+            type="button"
+            class="btn-close"
+            aria-label="Close"
+            onclick="closeDialog()"
+          ></button>
+          <table id="applyLoanTable">
+            <tbody id="applyLoanForm"></tbody>
+            <tr>
+              <td>Customer Id:</td>
+              <td>
+                <input type="text" id="inputCustomerId" required />
+              </td>
+            </tr>
+            <tr>
+              <td>Clerk Id:</td>
+              <td>
+                <input type="text" readonly id="inputClerkId" required />
+              </td>
+            </tr>
+            <tr>
+              <td>Loan Type:</td>
+              <td>
+                <select id="inputLoanType">
+                  <option value="1">Home Loan</option>
+                  <option value="2">Education Loan</option>
+                  <option value="3">Gold Loan</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Loan Tenure:</td>
+              <td>
+                <input type="number" id="inputLoanTenure" required />
+              </td>
+            </tr>
+            <tr>
+              <td>Rate of Interest:</td>
+              <td>
+                <input type="number" id="inputRoi" required />
+              </td>
+            </tr>
+            <tr>
+              <td>Requested Amount:</td>
+              <td>
+                <input type="text" id="inputRequestedAmount" required />
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <input
+                  type="button"
+                  id="buttonApplyLoan"
+                  onclick="applyLoan()"
+                  value="Apply"
+                />
+              </td>
+            </tr>
+          </table>
+        </div>
+      </dialog>
+      <div>
+        <table class="table table-bordered">
+          <tr>
+            <th>Loan ID</th>
+            <th>Loan Ammount</th>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Cancel</th>
+          </tr>
+          <tbody id="tabdata"></tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+  <script>
+    if (localStorage.getItem("userDetails") != null) {
+      var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
+      document.getElementById(
+        "uname"
+      ).innerHTML = `${localstorageData["username"]}`;
+    }
+
+    function applyLoanDialog() {
+      document.getElementById("applyLoanDialog").open = true;
+      let user = localStorage.getItem("userDetails");
+      console.log(user);
+      document.getElementById("inputClerkId").value = JSON.parse(user).id;
+    }
+
+    function applyLoan() {
+      //       {
+      //     "clerk_id": null,
+      //     "customer_id": "1e4b832a-5ec2-11ee-8c99-0242ac120002",
+      //     "loan_type": 1,
+      //     "application_status": 0,
+      //     "loan_tenure": 18,
+      //     "roi": 8.7,
+      //     "requested_amount": 200000.0
+      // }
+
+      function applyLoanRequest(
+        clerk_id,
+        customer_id,
+        loan_type,
+        application_status,
+        loan_tenure,
+        roi,
+        requested_amount
+      ) {
+        this.clerk_id = clerk_id;
+        this.customer_id = customer_id;
+        this.loan_type = loan_type;
+        this.application_status = application_status;
+        this.loan_tenure = loan_tenure;
+        this.roi = roi;
+        this.requested_amount = requested_amount;
+      }
+
+      let request = JSON.stringify(
+        new applyLoanRequest(
+          document.getElementById("inputClerkId").value,
+          document.getElementById("inputCustomerId").value,
+          document.getElementById("inputLoanType").value,
+          0,
+          document.getElementById("inputLoanTenure").value,
+          document.getElementById("inputRoi").value,
+          document.getElementById("inputRequestedAmount").value
+        )
+      );
+      console.log(request);
+      let xmlhttp = new XMLHttpRequest();
+      let url = "http://localhost:8080/loanApplication/apply";
+      xmlhttp.open("POST", url);
+      xmlhttp.setRequestHeader("content-type", "application/json");
+      xmlhttp.send(request);
+      xmlhttp.onload = function () {
+        let responseText = xmlhttp.responseText;
+        console.log(JSON.parse(responseText));
+      };
+    }
+
+    let xmlhttp = new XMLHttpRequest();
+    let url = "http://localhost:8080/loanApplication/all";
+    xmlhttp.open("GET", url);
+    xmlhttp.send();
+    xmlhttp.onload = function () {
+      let data = JSON.parse(xmlhttp.responseText);
+      showData(data);
+    };
+    function closeDialog(dialog) {
+      document.getElementById("applyLoanDialog").open = false;
+    }
+    function updateTable() {
+      let optionSelected = document.getElementById("loanType").value;
+      if (optionSelected == 0) {
+        var url = "http://localhost:8080/loanApplication/all";
+      } else {
+        url = `http://localhost:8080/loanApplication/type/${optionSelected}`;
+      }
+      xmlhttp.open("GET", url);
+      xmlhttp.send();
+      xmlhttp.onload = function () {
+        let tableData = JSON.parse(xmlhttp.responseText);
+        console.log(tableData);
+        showData(tableData);
+      };
+    }
+    function showData(data) {
+      var t = document.getElementById("tabdata");
+      t.innerHTML = "";
+      for (var i = 0; i < data.length; i++) {
+        let status = "";
+        switch (data[i].application_status) {
+          case 0:
+            status = "Pending";
+            break;
+          case 1:
+            status = "Approved";
+            break;
+          case 2:
+            status = "Rejected";
+            break;
+          case 3:
+            status = "Cancelled";
+            break;
+          case 4:
+            status = "Topup Pending";
+            break;
+        }
+
+        let type = "";
+        switch (data[i].loan_type) {
+          case 3:
+            type = "Gold Loan";
+            break;
+          case 1:
+            type = "HomeLoan";
+            break;
+          case 2:
+            type = "Education Loan";
+            break;
+        }
+
+        var ele = `<tr id=${data[i].loan_application_number}><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td> `;
+        if (!data[i].application_status) {
+          ele += ` <td> <button type="button" class="btn btn-primary" id="apply"  onclick="cancelLoan('${data[i].loan_application_number}',${localstorageData["role"]},'${localstorageData["id"]}')">Cancel Loan</button> </td></tr>`;
+        } else {
+          ele += `<td>Cannot cancel</td></tr>`;
+        }
+        t.innerHTML += ele;
+      }
+    }
+  </script>
 </html>
