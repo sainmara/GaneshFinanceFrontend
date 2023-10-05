@@ -44,3 +44,19 @@ body {
 .logoutbtn:hover{
     color: orange;
 }
+
+
+
+/**/
+.optionsArea
+{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    width:80vw;
+}
+.dateSelect
+{
+    display: flex;
+    justify-content: space-around;
+}

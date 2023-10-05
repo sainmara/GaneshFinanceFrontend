@@ -1,6 +1,9 @@
 <html>
+    
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'></link>  
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -17,10 +20,14 @@
     <script>
 
         var  localstorageData= JSON.parse(localStorage.getItem("userDetails"));
-        if(localStorage.getItem("userDetails") != null)
+        if(localStorage.getItem("userDetails") != null )
         {
             
             console.log("ok");
+            if(localstorageData["role"]==2)
+            {
+                window.location.assign("customer.html");
+            }
             window.location.assign(localstorageData["role"] == 0?"manager.html":"clerk.html");
         
         }
@@ -57,7 +64,8 @@
         this.branchCode=branchCode;
       }
       function validateDetails() {
-        if (localStorage.getItem("userDetails") == null) {
+        let userDetails = localStorage.getItem("userDetails");
+        if ( userDetails==  null || Object.keys(userDetails).length === 0) {
           let uname = document.getElementById("username").value;
           let password = document.getElementById("password").value;
           if (uname.length != 0 && password.length != 0) {
@@ -70,11 +78,22 @@
             xmlhttp.send(data);
             xmlhttp.onload = function () {
               let data = JSON.parse(xmlhttp.responseText);
+                console.log(data);
+              if (xmlhttp.status == "401") {
+               
+                 swal({
+                    icon: "error",
+                    title: `${data["error"]}`,
+                    button: "OK",
+                    timer: 3000,
+                    });
 
-              if (xmlhttp.status == "404") {
-                console.log(" resource not exists");
+                    
               }
-              if (data["statusCode"] != 404) {
+              if (xmlhttp.status==200) {
+
+               
+
                 let info = new storeData(
                   data["username"],
                   data["role"],
@@ -89,10 +108,6 @@
                 } else if (data["role"] == 2) {
                   window.location.assign("customer.html");
                 }
-              } else {
-                document.getElementById(
-                  "errmsgpwd"
-                ).innerHTML = `<span style="color: red;">${data["error"]}</span>`;
               }
             };
           }
