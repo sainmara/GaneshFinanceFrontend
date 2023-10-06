@@ -699,19 +699,10 @@
         let status = "";
         switch (data[i].loan_status) {
           case 0:
-            status = "Pending";
+            status = "Ongoing";
             break;
           case 1:
-            status = "Approved";
-            break;
-          case 2:
-            status = "Rejected";
-            break;
-          case 3:
-            status = "Cancelled";
-            break;
-          case 4:
-            status = "Topup Pending";
+            status = "Closed";
             break;
         }
 
