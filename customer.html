@@ -11,10 +11,19 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"
   ></script>
+   <!-- chart js  api -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
   <head>
     <style>
-      .applyLoanTable {
-        width: 300px;
+
+
+      #applyLoanTable {
+        width: 40%;
+        margin-left: 30%;
+        margin-right: 30%;
+        margin-top: 100px;
+
       }
       #loanapplications
       {
@@ -29,11 +38,34 @@
 
       #applyLoanDialog
       {
-        margin: auto;
+        width: 100%;
         display: none;
       }
+
+      .labelApplyLoan{
+        color: #B4886B;
+        font-weight: bold;
+        width: 150px;
+        float: left;
+      }
+
+      .inputApplyLoan{
+        margin-bottom: 12px;
+        height: 12px;
+      }
+
+      table {
+    border-collapse: collapse;
+}
+
+td {
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
       
       /* end of dialog box cs */
+
+      
 
       /* emicalculator css strat */
               *{
@@ -185,15 +217,39 @@
     </div>
     <div id="home"> Home</div>
     <div id="loanapplications">
+  <div class="optionsArea">
+    <div>
+      <select id="loanType" onchange="updateTable()">
+        <option value="0" selected>ALL</option>
+        <option value="1">Home Loan</option>
+        <option value="2">Education Loan</option>
+        <option value="3">Gold Loan</option>
+      </select>
+    </div>
+
+    <div class="dateSelect">
       <div>
-        <select id="loanType" onchange="updateTable()">
-          <option value="0" selected>ALL</option>
-          <option value="1">Home Loan</option>
-          <option value="2">Education Loan</option>
-          <option value="3">Gold Loan</option>
-        </select>
+      <label for="fromdate" class="form-label">From Date</label>
+      <input type="date"  id="fromdate" onchange="updateTableDate()">
       </div>
-      
+      <div>
+      <label for="todate" class="form-label">To Date</label>
+      <input type="date"  id="todate" onchange="updateTableDate()" >
+      </div>
+      </div>
+      <div>
+        <label for="loanStatus" class="form-label">Loan Status</label>
+        <select id="loanStatus" onchange="updateTableStatus()" >
+            <option value="5" selected>ALL</option>
+            <option value="1">Approved</option>
+            <option value="0">Pending</option>
+            <option value="3">Cancelled</option>
+            <option value="2">Rejected</option>
+            
+            
+        </select>
+    </div>
+</div>
       <div>
         <table class="table table-bordered">
           <tr>
@@ -215,53 +271,53 @@
 
     <!-- dialog box for apply-->
     <div id="applyLoanDialog">
-      <div class="applyLoanClass">
-        <button
-          type="button"
-          class="btn-close"
-          aria-label="Close"
-          onclick="closeDialog()"
-        ></button>
+        
         <table id="applyLoanTable">
           <tbody id="applyLoanForm"></tbody>
-          <tr>
-            <td>Customer Id:</td>
-            <td>
-              <input type="text" id="inputCustomerId" readonly required />
+          <tr style="margin-bottom: 4px;">
+            <td class="labelApplyLoan">Customer Username:</td>
+            <td class="inputApplyLoan">
+              <input  type="text" id="inputCustomerUsername" readonly required />
             </td>
           </tr>
           
-          <tr>
-            <td>Loan Type:</td>
-            <td>
-              <select id="inputLoanType">
+          <tr style="margin-bottom: 4px;">
+            <td class="labelApplyLoan">Loan Type:</td>
+            <td class="inputApplyLoan">
+              <select id="inputLoanType" onchange="updateROI()">
                 <option value="1">Home Loan</option>
                 <option value="2">Education Loan</option>
                 <option value="3">Gold Loan</option>
               </select>
             </td>
           </tr>
-          <tr>
-            <td>Loan Tenure:</td>
-            <td>
-              <input type="number" id="inputLoanTenure" required />
+          <tr style="margin-bottom: 4px;">
+            <td class="labelApplyLoan">Loan Tenure:</td>
+            <td class="inputApplyLoan">
+              <input type="number" id="inputLoanTenure" required onchange="calculateEMI()"/>
             </td>
           </tr>
-          <tr>
-            <td>Rate of Interest:</td>
-            <td>
-              <input type="number" id="inputRoi" required />
+          <tr style="margin-bottom: 12px;">
+            <td class="labelApplyLoan">Rate of Interest:</td>
+            <td class="inputApplyLoan">
+              <input type="number" id="inputRoi" required onchange="calculateEMI()" readonly />
             </td>
           </tr>
-          <tr>
-            <td>Requested Amount:</td>
-            <td>
-              <input type="text" id="inputRequestedAmount" required />
+          <tr style="margin-bottom: 12px;">
+            <td class="labelApplyLoan">Requested Amount:</td>
+            <td class="inputApplyLoan">
+              <input type="text" id="inputRequestedAmount" required  onchange="calculateEMI()" />
             </td>
           </tr>
-          <tr>
+          <tr style="margin-bottom: 12px;">
+            <td class="labelApplyLoan">Estimated EMI:</td>
+            <td class="inputApplyLoan">
+              <input type="text" id="inputEMI" value="0" readonly required />
+            </td>
+          </tr>
+          <tr style="margin-bottom: 12px;">
             <td></td>
-            <td>
+            <td class="inputApplyLoan">
               <input
                 type="button"
                 id="buttonApplyLoan"
@@ -271,46 +327,45 @@
             </td>
           </tr>
         </table>
-      </div>
     </div>
     <!-- dialog for apply loan end-->
     <!-- emi calculator part start -->
     
-      <div class="main" id="emicalc">
+    <div class="main" id="emicalc">
             
-        <h2>EMI Calculator</h2>
-        
-        <div class="calculator">
-            <div class="calculator-input">
-                <label for="">Loan Amount (Rs.):</label>
-                <input type="number" id="loan_amount">
-            </div>
-            <div class="calculator-input">
-                <label for="">Loan Tenure (Year.):</label>
-                <input type="number" id="loan_tenure">
-            </div>
-            <div class="calculator-input">
-                <label for="">Interest Rate (%):</label>
-                <input type="number" id="loan_interest">
-            </div>
-            <div class="calculator-input">
-                <button class="calculator-btn">Calculate EMI</button>
-            </div>
-        </div>
+      <h2>EMI Calculator</h2>
+      
+      <div class="calculator">
+          <div class="calculator-input">
+              <label for="">Loan Amount (Rs.):</label>
+              <input type="number" id="loan_amount">
+          </div>
+          <div class="calculator-input">
+              <label for="">Loan Tenure (Year.):</label>
+              <input type="number" id="loan_tenure">
+          </div>
+          <div class="calculator-input">
+              <label for="">Interest Rate (%):</label>
+              <input type="number" id="loan_interest">
+          </div>
+          <div class="calculator-input">
+              <button class="calculator-btn">Calculate EMI</button>
+          </div>
+      </div>
 
-        <div class="calculator-result">
-            <!---Canvas-->
-            <canvas id="loanChart"></canvas>
-            <ul>
-                <li>Monthly Loan EMI: <span class="loan_emi"></span></li>
-                <li>Principle Amount: <span class="loan_principle"></span></li>
-                <li>Loan on Interest: <span class="loan_interest_rate"></span></li>
-                <li>Total Amount to be paid: <span class="loan_total"></span></li>
-            </ul>
-        </div>
-    
-    </div>
-  </body>
+      <div class="calculator-result">
+          <!---Canvas-->
+          <canvas id="loanChart"></canvas>
+          <ul>
+              <li>Monthly Loan EMI: <span class="loan_emi"></span></li>
+              <li>Principle Amount: <span class="loan_principle"></span></li>
+              <li>Loan on Interest: <span class="loan_interest_rate"></span></li>
+              <li>Total Amount to be paid: <span class="loan_total"></span></li>
+          </ul>
+      </div>
+  
+  </div>
+ </body>
   <script>
     if (localStorage.getItem("userDetails") != null) {
       var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
@@ -322,9 +377,44 @@
     function applyLoanDialog() {
      
       let user = JSON.parse(localStorage.getItem("userDetails"));
-      
-      document.getElementById("inputCustomerId").value = user.id;
+      console.log(user)
+      document.getElementById("inputCustomerUsername").value = user.username;
+
+      let loanTypeCode = document.getElementById("inputLoanType").value;
+      console.log(loanTypeCode)
+      let loanTypeRequest = new XMLHttpRequest();
+      let loanTypeURL = "http://localhost:8080/loantype";
+      xmlhttp.open("GET", loanTypeURL);
+      xmlhttp.send();
+      xmlhttp.onload = function () {
+        let loanTypeResponse = xmlhttp.responseText;
+        console.log(JSON.parse(loanTypeResponse));
+        let loanTypeResponseObject = JSON.parse(loanTypeResponse)
+        let loanType = loanTypeResponseObject.filter(function(t){return t.loan_type_code == loanTypeCode})
+        console.log(loanType);
+        console.log(loanType[0])
+        document.getElementById("inputRoi").value = loanType[0].intrest_rate;
+      };
     }
+
+    function updateROI(){
+      let loanTypeCode = document.getElementById("inputLoanType").value;
+      console.log(loanTypeCode)
+      let loanTypeRequest = new XMLHttpRequest();
+      let loanTypeURL = "http://localhost:8080/loantype";
+      xmlhttp.open("GET", loanTypeURL);
+      xmlhttp.send();
+      xmlhttp.onload = function () {
+        let loanTypeResponse = xmlhttp.responseText;
+        console.log(JSON.parse(loanTypeResponse));
+        let loanTypeResponseObject = JSON.parse(loanTypeResponse)
+        let loanType = loanTypeResponseObject.filter(function(t){return t.loan_type_code == loanTypeCode})
+        console.log(loanType);
+        console.log(loanType[0])
+        document.getElementById("inputRoi").value = loanType[0].intrest_rate;
+      };
+    }
+
 
     function applyLoan() {
       //       {
@@ -354,9 +444,11 @@
         this.requested_amount = requested_amount;
       }
 
+      let user = JSON.parse(localStorage.getItem("userDetails"));
+      
       let request = JSON.stringify(
         new applyLoanRequest(
-          document.getElementById("inputCustomerId").value,
+          user.id,
           document.getElementById("inputLoanType").value,
           0,
           document.getElementById("inputLoanTenure").value,
@@ -393,17 +485,17 @@
       let user = JSON.parse(localStorage.getItem("userDetails"));
       let branchcode =user.branchCode ;
       let optionSelected = document.getElementById("loanType").value;
-      if (optionSelected == 0) {
-
+      
         var url = `http://localhost:8080/loanApplication/customer/${customer_id}`;
-      } else {
-        url = `http://localhost:8080/loanApplication/type/${optionSelected}`;
-      }
       xmlhttp.open("GET", url);
       xmlhttp.send();
       xmlhttp.onload = function () {
         let tableData = JSON.parse(xmlhttp.responseText);
-        console.log(tableData);
+        console.log(tableData)
+        if(optionSelected != 0){
+          
+        tableData=tableData.filter(function(t){return t.loan_type == optionSelected});
+        }
         showData(tableData);
       };
     }
@@ -512,5 +604,134 @@
                 localStorage.removeItem("userDetails");
                 window.location.assign("ganesh-finance.html");
         }
+
+
+        const loanAmount = document.getElementById("loan_amount");
+            const loanTenure = document.getElementById("loan_tenure");
+            const loanRate = document.getElementById("loan_interest");
+
+            const loanEmi = document.querySelector(".loan_emi");
+            const loanPrinciple = document.querySelector(".loan_principle");
+            const loanTotal = document.querySelector(".loan_total");
+            const loanInterest = document.querySelector(".loan_interest_rate");
+
+
+
+            const submitBtn = document.querySelector(".calculator-btn");
+
+            submitBtn.addEventListener("click", function(){
+
+                amount = loanAmount.value;
+                tenure = (loanTenure.value)*12; // 1Year = 12 months
+                rate = (loanRate.value)/12/100; // loan rate per year / 100 = loan percentage
+
+                emi = ((amount * rate * (1+rate)**tenure)/(((1+rate)**tenure)-1));
+                //console.log(emi);
+                total = emi * tenure; // total amount to be paid including interest
+                interest = total - amount // interest = total amount - principle amount
+              // console.log(total);
+                //console.log(interest);
+
+                loanEmi.innerHTML = Math.floor(emi);
+                loanPrinciple.innerHTML = Math.floor(amount);
+                loanTotal.innerHTML = Math.floor(total);
+                loanInterest.innerHTML = Math.floor(interest);
+
+
+                //Loanchart
+                let xValues = ["Principle", "Interest"];
+                let yValues = [amount, Math.floor(interest)];
+
+                let barColors = ["#f4511e", "#000000"];
+
+
+                new Chart("loanChart", {
+                    type: "pie",
+                    data: {
+                        labels: xValues,
+                        datasets:[{
+                            backgroundColor: barColors,
+                            data: yValues
+                        }]
+                    },
+                    // options: {
+                    //     title: {
+                    //         display:true,
+                    //     }
+                    // }
+                });
+
+              });
+
+              function calculateEMI(){
+                let tenure = document.getElementById("inputLoanTenure").value;
+                let roi = document.getElementById("inputRoi").value;
+                let rate = roi/100
+                let requested_amount = document.getElementById("inputRequestedAmount").value;
+                
+                if(!(tenure === "" || roi === "" || requested_amount === "")){
+                  emi = ((requested_amount * rate * (1+rate)**tenure)/(((1+rate)**tenure)-1));
+                  document.getElementById("inputEMI").value =Math.floor(emi);
+                
+                }
+              }
+
+              function updateTableDate()
+            {
+                let fromdate=document.getElementById("fromdate");
+                let todate=document.getElementById("todate");
+
+                let user = JSON.parse(localStorage.getItem("userDetails"));
+                let id =user.id ;
+
+
+                if(fromdate.value <= todate.value)
+                {   
+                    if(fromdate.value && todate.value)
+                    {
+                       
+                        var url= `http://localhost:8080/loanApplication/customer/${id}`;
+                        xmlhttp.open("GET",url);
+                        xmlhttp.send();
+                        xmlhttp.onload=function()
+                        {
+                            let tableData=JSON.parse(xmlhttp.responseText);
+                            let tdata=tableData.filter(function(t){return t.application_date >= fromdate.value && t.application_date<=todate.value});
+                            
+                            
+                            showData(tdata,"tabdata");  
+                        }
+                    } 
+
+                }
+                else{
+                    if(todate.value){
+                        fromdate.value=todate.value;
+                    }
+                }
+
+                
+            } 
+
+            function updateTableStatus()
+            {
+              let user = JSON.parse(localStorage.getItem("userDetails"));
+                let id =user.id ;
+
+              let optionSelected = document.getElementById("loanStatus").value;
+              var url= `http://localhost:8080/loanApplication/customer/${id}`;
+                        xmlhttp.open("GET",url);
+                        xmlhttp.send();
+                        xmlhttp.onload=function()
+                        {
+                            let tableData=JSON.parse(xmlhttp.responseText);
+                            if(optionSelected!=5){
+                             tableData=tableData.filter(function(t){return t.application_status == optionSelected});
+                            }
+                            console.log(tableData);
+                            showData(tableData,"tabdata");  
+                        }
+            }
+
  </script>
 </html>
