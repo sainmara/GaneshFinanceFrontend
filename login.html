@@ -15,15 +15,13 @@
     <link rel="stylesheet" href="project-finance.css" />
 
     <script>
-
-        var  localstorageData= JSON.parse(localStorage.getItem("userDetails"));
-        if(localStorage.getItem("userDetails") != null)
-        {
-            
-            console.log("ok");
-            window.location.assign(localstorageData["role"] == 0?"manager.html":"clerk.html");
-        
-        }
+      var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
+      if (localStorage.getItem("userDetails") != null) {
+        console.log("ok");
+        window.location.assign(
+          localstorageData["role"] == 0 ? "manager.html" : "clerk.html"
+        );
+      }
 
       function validateUname() {
         let uname = document.getElementById("username").value;
@@ -49,12 +47,12 @@
         this.username = username;
         this.password = password;
       }
-      function storeData(uname, jwttoken, role, id,branchCode) {
+      function storeData(uname, jwttoken, role, id, branchCode) {
         this.username = uname;
         this.token = jwttoken;
         this.role = role;
         this.id = id;
-        this.branchCode=branchCode;
+        this.branchCode = branchCode;
       }
       function validateDetails() {
         if (localStorage.getItem("userDetails") == null) {
@@ -79,7 +77,8 @@
                   data["username"],
                   data["role"],
                   data["role"],
-                  data["empcustid"],data["branchCode"]
+                  data["empcustid"],
+                  data["branchCode"]
                 );
                 localStorage.setItem("userDetails", JSON.stringify(info));
                 if (data["role"] == 0) {
@@ -96,7 +95,7 @@
               }
             };
           }
-        } 
+        }
       }
     </script>
   </head>
