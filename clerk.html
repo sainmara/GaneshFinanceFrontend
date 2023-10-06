@@ -16,19 +16,20 @@
   <!-- chart js  api -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
+  <!-- sweetalerts js files-->
+  <!-- Include SweetAlert CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.min.css">
+
+  <!-- Include SweetAlert JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.min.js"></script>
+
+    
   <head>
     <style>
       .applyLoanTable {
         width: 300px;
       }
-      #loanapplications
-      {
-        display: none;
-      }
-      #loanaccount
-      {
-        display: none;
-      }
+      
       
       /* dialog box css start */
 
@@ -36,6 +37,9 @@
       {
         margin: auto;
         display: none;
+        /* display: flex; */
+        justify-content: center;
+        align-items: center;
       }
       
       /* end of dialog box cs */
@@ -162,6 +166,17 @@
                 {
                   /* display: none; */
                 }
+                #buttonApplyLoan
+                {
+                  background-color: black;
+                  color: white;
+                }
+                #buttonApplyLoan:hover
+                {
+                  
+                  color: orange;
+                }
+
     </style>
     <script>
      
@@ -212,11 +227,13 @@
     <div>
         <label for="loanStatus" class="form-label">Loan Status</label>
         <select id="loanStatus" onchange="updateTableStatus()" >
-            <option value="0" selected>ALL</option>
+            <option value="4" selected>ALL</option>
+            <option value="0">Pending</option>
             <option value="1">Approved</option>
-            <option value="2">Pending</option>
+
+            <option value="2">Rejected</option>
             <option value="3">Cancelled</option>
-            <option value="4">Rejected</option>
+            
             
             
         </select>
@@ -238,7 +255,7 @@
     </div>
     <div id="loanaccount">
       Loan Account
-
+      
 
       <div>
         <select id="loanType2" onchange="updateLoanAccountTable()">
@@ -253,7 +270,7 @@
         <table class="table table-bordered">
           <tr>
             <th>Loan Application Number</th>
-            <th>Loan Ammount</th>
+            <th>Loan Amount</th>
             <th>Date</th>
             <th>Type</th>
             <th>Status</th>
@@ -268,18 +285,19 @@
     <!-- dialog box for apply-->
     <div id="applyLoanDialog">
       <div class="applyLoanClass">
-        <button
+        <!-- <button
           type="button"
           class="btn-close"
           aria-label="Close"
           onclick="closeDialog()"
-        ></button>
-        <table id="applyLoanTable">
+        ></button> -->
+        <form>
+        <table id="applyLoanTable" class="table">
           <tbody id="applyLoanForm"></tbody>
           <tr>
-            <td>Customer Id:</td>
+            <td>Customer Username:</td>
             <td>
-              <input type="text" id="inputCustomerId" required />
+              <input type="text" id="inputCustomerId" onblur="validateUsername()" required />
             </td>
           </tr>
           <tr>
@@ -291,7 +309,7 @@
           <tr>
             <td>Loan Type:</td>
             <td>
-              <select id="inputLoanType">
+              <select id="inputLoanType" onchange="setROI()">
                 <option value="1">Home Loan</option>
                 <option value="2">Education Loan</option>
                 <option value="3">Gold Loan</option>
@@ -307,20 +325,30 @@
           <tr>
             <td>Rate of Interest:</td>
             <td>
-              <input type="number" id="inputRoi" required />
+              <input type="number" id="inputRoi" value="9" required readonly />
             </td>
           </tr>
           <tr>
             <td>Requested Amount:</td>
             <td>
-              <input type="text" id="inputRequestedAmount" required />
+              <input type="number" id="inputRequestedAmount" onchange="calcEMI()"  required/>
+             
             </td>
+            
+          </tr>
+          <tr>
+            <td>EMI</td>
+            <td>
+              <input type="text" id="emiamount" value="0" readonly/>
+             
+            </td>
+            
           </tr>
           <tr>
             <td></td>
             <td>
-              <input
-                type="button"
+              <input class="btn "
+                type="submit"
                 id="buttonApplyLoan"
                 onclick="applyLoan()"
                 value="Apply"
@@ -328,6 +356,7 @@
             </td>
           </tr>
         </table>
+      </form>
       </div>
     </div>
     <!-- dialog for apply loan end-->
@@ -439,11 +468,13 @@
       xmlhttp.onload = function () {
         let responseText = xmlhttp.responseText;
         console.log(JSON.parse(responseText));
+
       };
 
     }// close applyloan method
+
     let user = JSON.parse(localStorage.getItem("userDetails"));
-      let branchcode =user.branchCode ;
+    let branchcode =user.branchCode ;
     let xmlhttp = new XMLHttpRequest();
     let url =`http://localhost:8080/loanApplication/branch/${branchcode}`;
     xmlhttp.open("GET", url);
@@ -452,9 +483,9 @@
       let data = JSON.parse(xmlhttp.responseText);
       showData(data,"tabdata");
     };
-    function closeDialog(dialog) {
-      document.getElementById("applyLoanDialog").style.display = "none";
-    }
+    // function closeDialog(dialog) {
+    //   document.getElementById("applyLoanDialog").style.display = "none";
+    // }
     function updateTable() {
       let user = JSON.parse(localStorage.getItem("userDetails"));
       let branchcode =user.branchCode ;
@@ -534,11 +565,6 @@
     // function for nav bar to nacigate between multiple tabs in navbar
     function showme(id)
     { 
-      if(id == "applyLoanDialog")
-      {
-        applyLoanDialog();
-      }
-
         navbarids.forEach(ele =>
         {
           if(ele != id)
@@ -546,8 +572,15 @@
             document.getElementById(ele).style.display="none";
           }
         });
+        
+      if(id == "applyLoanDialog")
+      {
+        applyLoanDialog();
+        document.getElementById(id).style.display="flex";
+      }
+      else{
         document.getElementById(id).style.display="block";
-          
+      }
 
 
     }
@@ -592,6 +625,31 @@
 
         }
 
+        function loanAccountRequest(role,branch_code,id)
+        {
+          this.role = role;
+          this.branch_code = branch_code;
+          this.id = id;
+        }
+       // getting detals from localstorafe
+        let branch_code =user.branchCode ;
+        let id=user.id;
+        let role=user.role;
+        let xmlhttp1=new XMLHttpRequest();
+        // let xmlhttp = new XMLHttpRequest();
+        url =`http://localhost:8080/loanAccount`;
+        xmlhttp1.open("POST", url);
+        let data = JSON.stringify( new loanAccountRequest(role,branch_code,id));
+        xmlhttp1.setRequestHeader("content-type", "application/json");
+        console.log(data);
+        xmlhttp1.send(data);
+            
+      
+        xmlhttp1.onload = function () {
+          console.log(xmlhttp1.status);
+        };
+        
+
 
         // filtering the table data based onn date and stauts functions
         function updateTableDate()
@@ -599,6 +657,19 @@
                 let fromdate=document.getElementById("fromdate");
                 let todate=document.getElementById("todate");
 
+                console.log(todate.value);
+
+                let currentDate = new Date().toJSON().slice(0, 10);
+                //console.log(currentDate); // "2022-06-17"
+
+                if(todate.value>currentDate ){
+                  Swal.fire({title:"Date cannot be more than current date"});
+                  todate.value=currentDate;
+                }
+                if(fromdate.value>currentDate ){
+                  Swal.fire({title:"Date cannot be more than current date"});
+                  fromdate.value=currentDate;
+                }
                 let user = JSON.parse(localStorage.getItem("userDetails"));
                 let branchcode =user.branchCode ;
 
@@ -625,6 +696,17 @@
                 else{
                     if(todate.value){
                         fromdate.value=todate.value;
+                        var url= `http://localhost:8080/loanApplication/branch/${branchcode}`;
+                        xmlhttp.open("GET",url);
+                        xmlhttp.send();
+                        xmlhttp.onload=function()
+                        {
+                            let tableData=JSON.parse(xmlhttp.responseText);
+                            let tdata=tableData.filter(function(t){return t.application_date >= fromdate.value && t.application_date<=todate.value});
+                            
+                            
+                            showData(tdata,"tabdata");  
+                        }
                     }
                 }
 
@@ -640,7 +722,7 @@
                         xmlhttp.onload=function()
                         {
                             let tableData=JSON.parse(xmlhttp.responseText);
-                            if(optionSelected!=0){
+                            if(optionSelected!=4){
                              tableData=tableData.filter(function(t){return t.application_status == optionSelected});
                             }
                             console.log(tableData);
@@ -648,8 +730,67 @@
                         }
             }
 
+            //validating the username in apply form
+            function validateUsername()
+            {
+            
 
+              let ele = document.getElementById("inputCustomerId");
+              // let xmlhttp = new XMLHttpRequest();
+              // let url="http://localhost:8080/"
+          
+              if(ele.value.length==0)
+              {
+                
+                Swal.fire({
+                    icon: "error",
+                    title: `Username cannot be empty`,                  
+                    });
+                    document.getElementById("buttonApplyLoan").disabled=true;
+              }
+              else if(ele.value!="sai")
+              {
+                Swal.fire({icon:"error",title:"Invalid Username"})
+                document.getElementById("buttonApplyLoan").disabled=true;
+              }
+              else if(ele.value == 'sai')
+              {
+                
+                Swal.fire({icon:"success",title:"Valid Username",timer:"1500"});
+                document.getElementById("buttonApplyLoan").disabled=false;
+              }
+            }
 
+            function setROI()
+            {
+              let ele=document.getElementById("inputLoanType");
+              let roiele = document.getElementById("inputRoi");
+
+              let xmlhttp=new XMLHttpRequest();
+              xmlhttp.open("GET",`http://localhost:8080/loantype`);
+              xmlhttp.send();
+              xmlhttp.onload=function()
+              {
+                
+                let receivedData = JSON.parse(xmlhttp.responseText);
+                receivedData=receivedData.filter(function(p){return p.loan_type_code == ele.value});
+               // console.log(receivedData);
+                roiele.value=receivedData[0].intrest_rate;
+              }
+            }
+
+            function calcEMI()
+            {
+              let amount = document.getElementById("inputRequestedAmount").value;
+              let roi=document.getElementById("inputRoi").value;
+              let tenure=document.getElementById("inputLoanTenure").value *12;
+              let rate = (roi)/12/100; // loan rate per year / 100 = loan percentage
+
+              emi = ((amount * rate * (1+rate)**tenure)/(((1+rate)**tenure)-1));
+              let emiele=document.getElementById("emiamount");
+              emiele.value=emi;
+            }
+          
 
             // emicalc js
             

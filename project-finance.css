@@ -1,6 +1,6 @@
 .heading {
   background: #f4511e;
-  height: 8vh;
+  height: fit-content;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -59,4 +59,13 @@ body {
 {
     display: flex;
     justify-content: space-around;
+}
+
+#loanapplications
+{
+    display: none;
+}
+#loanaccount
+{
+    display: none;
 }
