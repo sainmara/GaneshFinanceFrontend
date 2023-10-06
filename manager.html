@@ -9,12 +9,59 @@
 
         <!-- Include SweetAlert JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.min.js"></script>
-
+        
 
 
         <link rel="stylesheet" href="project-finance.css"/>
-  
+        <script src="project-finence.js"></script>
+
         <style>
+
+            
+.labelApplyLoan {
+  color: #b4886b;
+  margin-left: 24px;
+  margin-right: 4px;
+  font-weight: bold;
+  width: 200px;
+  float: left;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding-top: .5em;
+    padding-bottom: .5em;
+}
+
+
+#applyLoanTable {
+        width: 40%;
+        margin-left: 30%;
+        margin-right: 30%;
+        margin-top: 100px;
+
+      }
+
+.swal-wide {
+        width: 95vw;
+      }
+
+.inputApplyLoan {
+  margin-bottom: 12px;
+  height: 12px;
+  width: 300px;
+}
+
+      #transactionTableTitle{
+        font-size: 24px;
+        font-weight: bold;
+        font-family: sans-serif;
+        color:#7d7d7d;
+      }
+
             .heading{
                 display :flex;
                 justify-content: space-between;
@@ -694,15 +741,7 @@
 
           }
         };
-        function showLoanDetails(loanaccountnumber)
-            {
-
-              Swal.fire({
-                title: "<i>Title</i>", 
-                html: `<b>${loanaccountnumber}</b>`,  
-                confirmButtonText: "OK", 
-                confirmButtonColor: "orange"
-              });
-            }
+        
+        
 </script>
 </html>

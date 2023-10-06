@@ -10,7 +10,9 @@
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"
-  ></script>
+  >
+</script>
+<script src="project-finence.js"></script>
    <!-- chart js  api -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
@@ -25,14 +27,6 @@
   <head>
     <style>
 
-
-      #applyLoanTable {
-        width: 40%;
-        margin-left: 30%;
-        margin-right: 30%;
-        margin-top: 100px;
-
-      }
       #loanapplications
       {
         display: none;
@@ -41,6 +35,42 @@
       {
         display: none;
       }
+
+      
+.labelApplyLoan {
+  color: #b4886b;
+  margin-left: 24px;
+  margin-right: 4px;
+  font-weight: bold;
+  width: 200px;
+  float: left;
+}
+
+.inputApplyLoan {
+  margin-bottom: 12px;
+  height: 12px;
+  width: 300px;
+}
+
+      .swal-wide{
+        width: 95vw;
+      }
+      #applyLoanTable {
+        width: 40%;
+        margin-left: 30%;
+        margin-right: 30%;
+        margin-top: 100px;
+
+      }
+
+      #transactionTableTitle{
+        font-size: 24px;
+        font-weight: bold;
+        font-family: sans-serif;
+        color:#7d7d7d;
+      }
+
+      
       
       /* dialog box css start */
 
@@ -50,17 +80,6 @@
         display: none;
       }
 
-      .labelApplyLoan{
-        color: #B4886B;
-        font-weight: bold;
-        width: 150px;
-        float: left;
-      }
-
-      .inputApplyLoan{
-        margin-bottom: 12px;
-        height: 12px;
-      }
 
       table {
     border-collapse: collapse;
@@ -436,15 +455,6 @@ td {
 
 
     function applyLoan() {
-      //       {
-      //     "clerk_id": null,
-      //     "customer_id": "1e4b832a-5ec2-11ee-8c99-0242ac120002",
-      //     "loan_type": 1,
-      //     "application_status": 0,
-      //     "loan_tenure": 18,
-      //     "roi": 8.7,
-      //     "requested_amount": 200000.0
-      // }
 
       function applyLoanRequest(
         
@@ -807,16 +817,6 @@ td {
 
           }
         };
-        function showLoanDetails(loanaccountnumber)
-            {
-
-              Swal.fire({
-                title: "<i>Title</i>", 
-                html: `<b>${loanaccountnumber}</b>`,  
-                confirmButtonText: "OK", 
-                confirmButtonColor: "orange"
-              });
-            }
 
 
  </script>

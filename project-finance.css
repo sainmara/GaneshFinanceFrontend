@@ -10,6 +10,38 @@
 body {
   margin-bottom: 100px;
 }
+
+#transactionTableTitle {
+  font-size: 24px;
+  font-weight: bold;
+  font-family: sans-serif;
+  color: #7d7d7d;
+}
+
+.loginbtn {
+  color: black;
+  font-weight: bold;
+  border-radius: 12px;
+  border-width: 2px;
+  border-color: black;
+  background-color: orange;
+}
+
+.labelApplyLoan {
+  color: #b4886b;
+  margin-left: 24px;
+  margin-right: 4px;
+  font-weight: bold;
+  width: 200px;
+  float: left;
+}
+
+.inputApplyLoan {
+  margin-bottom: 12px;
+  height: 12px;
+  width: 300px;
+}
+
 .title {
   padding-left: 2vw;
   font-size: 6vh;
@@ -36,36 +68,29 @@ body {
   align-items: center;
   justify-content: center;
 }
-.logoutbtn
-{
-    color:white; 
-    background-color: black;
+.logoutbtn {
+  color: white;
+  background-color: black;
 }
-.logoutbtn:hover{
-    color: orange;
+.logoutbtn:hover {
+  color: orange;
 }
-
-
 
 /**/
-.optionsArea
-{
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    width:80vw;
+.optionsArea {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  width: 80vw;
 }
-.dateSelect
-{
-    display: flex;
-    justify-content: space-around;
+.dateSelect {
+  display: flex;
+  justify-content: space-around;
 }
 
-#loanapplications
-{
-    display: none;
+#loanapplications {
+  display: none;
 }
-#loanaccount
-{
-    display: none;
+#loanaccount {
+  display: none;
 }
