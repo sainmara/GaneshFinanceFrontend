@@ -189,8 +189,8 @@
       <div class="options">
         <span><a href="#" onclick="showme('home')">Home</a></span>
         <span><a href="#emicalculator" onclick="showme('emicalc')">EMI Calculator</a></span>
-        <span><a href="#" onclick="showme('loanapplications')">Loan Applications</a></span>
-        <span><a href="#" onclick="showme('loanaccount')"">Loan Account</a></span>
+        <span><a href="#" onclick="showme('loanapplications')">Applications</a></span>
+        <span><a href="#" onclick="showme('loanaccount')"> Active Loans</a></span>
           <button
           type="button"
           class="btn"
@@ -269,12 +269,13 @@
       <div>
         <table class="table table-bordered">
           <tr>
-            <th>Loan Application Number</th>
-            <th>Loan Amount</th>
-            <th>Date</th>
-            <th>Type</th>
+            <th>Loan Account Number</th>
+            <th>Loan Sacntioned Amount</th>
+            <th>Loan Disbursed Amount</th>
+            <th>Approval Date</th>
+            <th>Intrest rate</th>
+            <th>EMI</th>
             <th>Status</th>
-            <th>Cancel</th>
           </tr>
           <tbody id="loanaccountdata"></tbody>
         </table>
@@ -646,8 +647,40 @@
             
       
         xmlhttp1.onload = function () {
-          console.log(xmlhttp1.status);
+          let data=JSON.parse(xmlhttp1.responseText);
+
+          console.log(data);
+          let tbodyloanAccount = document.getElementById("loanaccountdata");
+          tbodyloanAccount.innerHTML="";
+          for (var i = 0; i < data.length; i++) {
+
+
+            let status = "";
+        switch (data[i].loan_status) {
+          case 0:
+            status = "Pending";
+            break;
+          case 1:
+            status = "Approved";
+            break;
+          case 2:
+            status = "Rejected";
+            break;
+          case 3:
+            status = "Cancelled";
+            break;
+          case 4:
+            status = "Topup Pending";
+            break;
+        }
+
+          var ele = `<tr id=${data[i].loan_account_number}><td>${data[i].loan_account_number}</td><td> ${data[i].sanctioned_amount}</td><td> ${data[i].disbursed_amount}</td><td> ${data[i].approval_date}</td> <td> ${data[i].roi}</td><td> ${data[i].emi}</td><td>${status}</td></tr> `;
+          
+            tbodyloanAccount.innerHTML+=ele;
+
+          }
         };
+
         
 
 

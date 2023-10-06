@@ -165,6 +165,7 @@
       
             <div>
               <select id="loanType2" onchange="updateLoanAccountTable()">
+
                 <option value="0" selected>ALL</option>
                 <option value="1">Home Loan</option>
                 <option value="2">Education Loan</option>
@@ -173,17 +174,18 @@
             </div>
             
             <div>
-              <table class="table table-bordered">
-                <tr>
-                  <th>Loan Account Number</th>
-                  <th>Loan Amount</th>
-                  <th>Date</th>
-                  <th>Type</th>
-                  <th>Status</th>
-                  <th>Cancel</th>
-                </tr>
-                <tbody id="loanaccountdata"></tbody>
-              </table>
+                <table class="table table-bordered">
+                    <tr>
+                      <th>Loan Account Number</th>
+                      <th>Loan Sacntioned Amount</th>
+                      <th>Loan Disbursed Amount</th>
+                      <th>Approval Date</th>
+                      <th>Intrest rate</th>
+                      <th>EMI</th>
+                      <th>Status</th>
+                    </tr>
+                    <tbody id="loanaccountdata"></tbody>
+                  </table>
             </div>
           </div>
         <dialog id="Dialog1">
@@ -632,6 +634,66 @@
             document.getElementById(id).style.display="block";
 
     }
+
+
+    // getting detals from localstorafe
+
+        function loanAccountRequest(role,branch_code,id)
+        {
+          this.role = role;
+          this.branch_code = branch_code;
+          this.id = id;
+        }
+
+        let user =JSON.parse(localStorage.getItem("userDetails"));
+
+        let branch_code =user.branchCode ;
+        let id=user.id;
+        let role=user.role;
+        let xmlhttp1=new XMLHttpRequest();
+        // let xmlhttp = new XMLHttpRequest();
+        url =`http://localhost:8080/loanAccount`;
+        xmlhttp1.open("POST", url);
+        let data = JSON.stringify( new loanAccountRequest(role,branch_code,id));
+        xmlhttp1.setRequestHeader("content-type", "application/json");
+        console.log(data);
+        xmlhttp1.send(data);
+            
+      
+        xmlhttp1.onload = function () {
+          let data=JSON.parse(xmlhttp1.responseText);
+
+          console.log(data);
+          let tbodyloanAccount = document.getElementById("loanaccountdata");
+          tbodyloanAccount.innerHTML="";
+          for (var i = 0; i < data.length; i++) {
+
+
+            let status = "";
+        switch (data[i].loan_status) {
+          case 0:
+            status = "Pending";
+            break;
+          case 1:
+            status = "Approved";
+            break;
+          case 2:
+            status = "Rejected";
+            break;
+          case 3:
+            status = "Cancelled";
+            break;
+          case 4:
+            status = "Topup Pending";
+            break;
+        }
+        console.log("ok");
+          var ele = `<tr id=${data[i].loan_account_number}><td>${data[i].loan_account_number}</td><td> ${data[i].sanctioned_amount}</td><td> ${data[i].disbursed_amount}</td><td> ${data[i].approval_date}</td> <td> ${data[i].roi}</td><td> ${data[i].emi}</td><td>${status}</td></tr> `;
+          
+            tbodyloanAccount.innerHTML+=ele;
+
+          }
+        };
 
 </script>
 </html>
