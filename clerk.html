@@ -674,11 +674,13 @@
             break;
         }
 
-          var ele = `<tr id=${data[i].loan_account_number}><td>${data[i].loan_account_number}</td><td> ${data[i].sanctioned_amount}</td><td> ${data[i].disbursed_amount}</td><td> ${data[i].approval_date}</td> <td> ${data[i].roi}</td><td> ${data[i].emi}</td><td>${status}</td></tr> `;
+          var ele = `<tr id=${data[i].loan_account_number} onclick=showLoanDetails('${data[i].loan_account_number}')><td>${data[i].loan_account_number}</td><td> ${data[i].sanctioned_amount}</td><td> ${data[i].disbursed_amount}</td><td> ${data[i].approval_date}</td> <td> ${data[i].roi}</td><td> ${data[i].emi}</td><td>${status}</td></tr> `;
           
             tbodyloanAccount.innerHTML+=ele;
 
           }
+
+
         };
 
         
@@ -884,5 +886,16 @@
 
 
             });
+
+            function showLoanDetails(loanaccountnumber)
+            {
+
+              Swal.fire({
+                title: "<i>Title</i>", 
+                html: `<b>${loanaccountnumber}</b>`,  
+                confirmButtonText: "OK", 
+                confirmButtonColor: "orange"
+              });
+            }
  </script>
 </html>

@@ -14,6 +14,14 @@
    <!-- chart js  api -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
+
+    <!-- sweetalerts js files-->
+        <!-- Include SweetAlert CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.min.css">
+
+        <!-- Include SweetAlert JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.min.js"></script>
+
   <head>
     <style>
 
@@ -793,12 +801,23 @@ td {
             break;
         }
 
-          var ele = `<tr id=${data[i].loan_account_number}><td>${data[i].loan_account_number}</td><td> ${data[i].sanctioned_amount}</td><td> ${data[i].disbursed_amount}</td><td> ${data[i].approval_date}</td> <td> ${data[i].roi}</td><td> ${data[i].emi}</td><td>${status}</td></tr> `;
+          var ele = `<tr id=${data[i].loan_account_number} onclick=showLoanDetails('${data[i].loan_account_number}')><td>${data[i].loan_account_number}</td><td> ${data[i].sanctioned_amount}</td><td> ${data[i].disbursed_amount}</td><td> ${data[i].approval_date}</td> <td> ${data[i].roi}</td><td> ${data[i].emi}</td><td>${status}</td></tr> `;
           
             tbodyloanAccount.innerHTML+=ele;
 
           }
         };
+        function showLoanDetails(loanaccountnumber)
+            {
+
+              Swal.fire({
+                title: "<i>Title</i>", 
+                html: `<b>${loanaccountnumber}</b>`,  
+                confirmButtonText: "OK", 
+                confirmButtonColor: "orange"
+              });
+            }
+
 
  </script>
 </html>
