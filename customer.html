@@ -12,6 +12,11 @@
     crossorigin="anonymous"
   >
 </script>
+
+<!-- PDF FILES CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.js"></script>
+
 <script src="project-finence.js"></script>
    <!-- chart js  api -->
    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
@@ -285,6 +290,7 @@ td {
             <th>Date</th>
             <th>Type</th>
             <th>Status</th>
+            <th>DOCS</th>
             <th>Cancel</th>
           </tr>
           <tbody id="tabdata"></tbody>
@@ -353,6 +359,13 @@ td {
               <input type="text" id="inputEMI" value="0" readonly required />
             </td>
           </tr>
+          <tr>
+            <td class="labelApplyLoan">Aadhar PDF</td>
+            <td class="inputApplyLoan">
+              <input type="file" id="aadharfile" accept=".pdf"/>
+              
+            </td>
+          </tr>
           <tr style="margin-bottom: 12px;">
             <td></td>
             <td class="inputApplyLoan">
@@ -364,6 +377,7 @@ td {
               />
             </td>
           </tr>
+          
         </table>
     </div>
     <!-- dialog for apply loan end-->
@@ -456,44 +470,28 @@ td {
 
     function applyLoan() {
 
-      function applyLoanRequest(
-        
-        customer_id,
-        loan_type,
-        application_status,
-        loan_tenure,
-        roi,
-        requested_amount
-      ) {
-        this.customer_id = customer_id;
-        this.loan_type = loan_type;
-        this.application_status = application_status;
-        this.loan_tenure = loan_tenure;
-        this.roi = roi;
-        this.requested_amount = requested_amount;
-      }
-
       let user = JSON.parse(localStorage.getItem("userDetails"));
-      
-      let request = JSON.stringify(
-        new applyLoanRequest(
-          user.id,
-          document.getElementById("inputLoanType").value,
-          0,
-          document.getElementById("inputLoanTenure").value,
-          document.getElementById("inputRoi").value,
-          document.getElementById("inputRequestedAmount").value
-        )
-      );
-      console.log(request);
+      let fileInput = document.getElementById("aadharfile");
+        
+
+      const files=fileInput.files[0];
+        let formdata=new FormData();
+
+        formdata.append('file',files);
+        formdata.append('type1','aadhar');
+        formdata.append('clerk_id',"1e4b7754-5ec2-11ee-8c99-0242ac120002");
+        formdata.append('customerid',user.id);
+        formdata.append('loantype',document.getElementById("inputLoanType").value);
+        formdata.append('applicationstatus',0);
+        formdata.append('loantenure',document.getElementById("inputLoanTenure").value);
+        formdata.append('roi', document.getElementById("inputRoi").value);
+        formdata.append('requestedamount', document.getElementById("inputRequestedAmount").value);
+
       let xmlhttp = new XMLHttpRequest();
       let url = "http://localhost:8080/loanApplication/apply";
       xmlhttp.open("POST", url);
-      xmlhttp.setRequestHeader("content-type", "application/json");
-      xmlhttp.send(request);
+      xmlhttp.send(formdata);
       xmlhttp.onload = function () {
-        let responseText = xmlhttp.responseText;
-        console.log(JSON.parse(responseText));
       };
 
     }// close applyloan method

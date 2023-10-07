@@ -14,7 +14,10 @@
 
         <link rel="stylesheet" href="project-finance.css"/>
         <script src="project-finence.js"></script>
-
+      <!-- PDF FILES CDN -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.js"></script>
+        
         <style>
 
             
@@ -123,7 +126,26 @@ td {
                 color:red;
             }
 
+            
+            #pdf-container
+            {
+                display: none;
+                position: absolute;
+                margin: auto;
+                top: 50px;
+                left:200px;
+                z-index: 10;
+                height: 500px;
+                overflow-y: auto;
+                border: 1px solid;
 
+            }
+
+            .clspdf
+            {
+                display: flex;
+                justify-content: end;
+            }
         </style>
         <script>
             
@@ -136,18 +158,10 @@ td {
             
             <div class="options">
                 <span><a href="#" onclick="showme('home')">Home</a></span>
-                <!-- <span><a href="#emicalculator" onclick="showme('emicalc')">EMI Calculator</a></span> -->
+                
                 <span><a href="#" onclick="showme('loanapplications')">Applications</a></span>
                 <span><a href="#" onclick="showme('loanaccount')"">Active Loans</a></span>
-                  <!-- <button
-                  type="button"
-                  class="btn"
-                  id="apply"
-                  onclick="showme('applyLoanDialog')"
-                 
-                  >
-                  Apply New Loan
-                </button> -->
+                  
                 <button type="button" class="btn logoutbtn" id="apply"  onclick="logout()">Logout</button>
               </div>
         </div>
@@ -206,6 +220,13 @@ td {
 
             </div>
         </div>
+
+        <div id="pdf-container">
+            <div class="clspdf"> 
+                <button  type="button" class="btn-close" aria-label="Close" onclick="closePdf()"></button>
+                </div>
+          </div>
+
         <div id="loanaccount">
             Loan Account
             
@@ -324,17 +345,6 @@ td {
                 {   
                     if(fromdate.value && todate.value)
                     {
-                        
-                        // var url=`http://localhost:8080/loanApplication/date/${fromdate.value}/${todate.value}`;
-                        // xmlhttp.open("GET",url);
-                        // xmlhttp.send();
-                        // xmlhttp.onload=function()
-                        // {
-                        //     let tableData=JSON.parse(xmlhttp.responseText);
-                        //     let tdata=tableData;
-                        //     //console.log(tdata);
-                        //     showData(tdata);  
-                        // }
                         var url= `http://localhost:8080/loanApplication/branch/${branchcode}`;
                         xmlhttp.open("GET",url);
                         xmlhttp.send();
@@ -342,7 +352,6 @@ td {
                         {
                             let tableData=JSON.parse(xmlhttp.responseText);
                             let tdata=tableData.filter(function(t){return t.application_date >= fromdate.value && t.application_date<=todate.value});
-                            
                             
                             showData(tdata,"tabdata");  
                         }
@@ -427,10 +436,13 @@ td {
             // 
 
             let xmlhttp = new XMLHttpRequest();
-            xmlhttp.open("GET",`http://localhost:8080/loanApplication/number/${applicationNumber}`);
+            xmlhttp.open("GET",`http://localhost:8080/loanApplication/number1/${applicationNumber}`);
             xmlhttp.send();
             xmlhttp.onload=function()
-            {
+             {
+               let data= xmlhttp.responseText;
+               console.log(JSON.parse(data));
+              
                 let applicationData= JSON.parse(xmlhttp.responseText);
 
                 let dialog=document.getElementById("Dialog1");
@@ -447,7 +459,7 @@ td {
                 <th>Application Date</th>
                 <th>Loan Tenure</th>
                 <th>ROI</th>
-                
+                <th>DOCS</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -458,7 +470,7 @@ td {
                         <td>${applicationData.application_date}</td>
                         <td>${applicationData.loan_tenure}</td>
                         <td>${applicationData.roi}</td>
-                        
+                        <td onclick=" loadAndDisplayPDF('${applicationData.fileBytes}')">View Docs</td>
                     </tr>
                 </tbody>
             </table>
@@ -735,6 +747,14 @@ td {
           }
         };
         
-        
+       
+
+            function closePdf()
+            {
+                document.getElementById("pdf-container").style.display="none";
+            }
+            
+
+
 </script>
 </html>

@@ -26,6 +26,10 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.min.js"></script>
   <script src="project-finence.js"></script>
 
+  <!-- PDF FILES CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.js"></script>
+  
   <head>
     <style>
       #applyLoanTable {
@@ -397,6 +401,13 @@
           </td>
         </tr>
         <tr>
+          <td class="labelApplyLoan">Aadhar PDF</td>
+          <td class="inputApplyLoan">
+            <input type="file" id="aadharfile" accept=".pdf"/>
+            
+          </td>
+        </tr>
+        <tr>
           <td></td>
           <td>
             <input
@@ -411,8 +422,11 @@
       </table>
     </div>
     <!-- dialog for apply loan end-->
-    <!-- emi calculator part start -->
 
+    <embed id="displayfiles" src="#" type="application/pdf" style="display: none; width: 100%; height: 500px;"> 
+
+    <!-- emi calculator part start -->
+    
     <div class="main" id="emicalc">
       <h2>EMI Calculator</h2>
 
@@ -435,7 +449,7 @@
       </div>
 
       <div class="calculator-result">
-        <!---Canvas-->
+        
         <canvas id="loanChart"></canvas>
         <ul>
           <li>Monthly Loan EMI: <span class="loan_emi"></span></li>
@@ -471,33 +485,34 @@
     }
 
     function applyLoan() {
-      //       {
-      //     "clerk_id": null,
-      //     "customer_id": "1e4b832a-5ec2-11ee-8c99-0242ac120002",
-      //     "loan_type": 1,
-      //     "application_status": 0,
-      //     "loan_tenure": 18,
-      //     "roi": 8.7,
-      //     "requested_amount": 200000.0
+           // function applyLoanRequest(
+      //   clerk_id,
+      //   customer_id,
+      //   loan_type,
+      //   application_status,
+      //   loan_tenure,
+      //   roi,
+      //   requested_amount,
+      //   files
+        
+      // ) {
+      //   let formdta=new FormData();
+      //   this.clerk_id = clerk_id;
+      //   this.customer_id = customer_id;
+      //   this.loan_type = loan_type;
+      //   this.application_status = application_status;
+      //   this.loan_tenure = loan_tenure;
+      //   this.roi = roi;
+      //   this.requested_amount = requested_amount;
+      //   this.formdata=formdta.append('file',files);
       // }
 
-      function applyLoanRequest(
-        clerk_id,
-        customer_id,
-        loan_type,
-        application_status,
-        loan_tenure,
-        roi,
-        requested_amount
-      ) {
-        this.clerk_id = clerk_id;
-        this.customer_id = customer_id;
-        this.loan_type = loan_type;
-        this.application_status = application_status;
-        this.loan_tenure = loan_tenure;
-        this.roi = roi;
-        this.requested_amount = requested_amount;
-      }
+        //doc data
+
+      let fileInput = document.getElementById("aadharfile");
+        
+
+      const files=fileInput.files[0];
       let ele = document.getElementById("inputCustomerId");
       let customerIDRequest = new XMLHttpRequest();
       let customerIDurl = `http://localhost:8080/Authentication/customer/${ele.value}`;
@@ -507,30 +522,35 @@
       customerIDRequest.onload = function () {
         customerID = JSON.parse(customerIDRequest.responseText).customer_id;
 
-        let request = JSON.stringify(
-          new applyLoanRequest(
-            document.getElementById("inputClerkId").value,
-            customerID,
-            document.getElementById("inputLoanType").value,
-            0,
-            document.getElementById("inputLoanTenure").value,
-            document.getElementById("inputRoi").value,
-            document.getElementById("inputRequestedAmount").value
-          )
-        );
-        console.log(request);
+
+        let formdata=new FormData();
+
+        formdata.append('file',files);
+        formdata.append('type1','aadhar');
+        formdata.append('clerk_id',document.getElementById("inputClerkId").value);
+        formdata.append('customerid',customerID);
+        formdata.append('loantype',document.getElementById("inputLoanType").value);
+        formdata.append('applicationstatus',0);
+        formdata.append('loantenure',document.getElementById("inputLoanTenure").value);
+        formdata.append('roi', document.getElementById("inputRoi").value);
+        formdata.append('requestedamount', document.getElementById("inputRequestedAmount").value);
+
+        //console.log(request);
         let xmlhttp = new XMLHttpRequest();
         let url = "http://localhost:8080/loanApplication/apply";
         xmlhttp.open("POST", url);
-        xmlhttp.setRequestHeader("content-type", "application/json");
-        xmlhttp.send(request);
+       // xmlhttp.setRequestHeader("content-type", "application/json");
+        xmlhttp.send(formdata);
         xmlhttp.onload = function () {
-          let responseText = xmlhttp.responseText;
-          console.log(JSON.parse(responseText));
+          // let responseText = xmlhttp.responseText;
+          // console.log(JSON.parse(responseText));
         };
       };
+
+
     } // close applyloan method
 
+    //fetching loan application details onload and siaplaying 
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let branchcode = user.branchCode;
     let xmlhttp = new XMLHttpRequest();
@@ -541,9 +561,8 @@
       let data = JSON.parse(xmlhttp.responseText);
       showData(data, "tabdata");
     };
-    // function closeDialog(dialog) {
-    //   document.getElementById("applyLoanDialog").style.display = "none";
-    // }
+    
+    //Updating the table based on loan type.
     function updateTable() {
       let user = JSON.parse(localStorage.getItem("userDetails"));
       let branchcode = user.branchCode;
@@ -568,6 +587,7 @@
       };
     }
 
+    /*Showdata method for showing loan applications data when sorting and onload */
     function showData(data, id) {
       var t = document.getElementById(id);
       // alert(id);
@@ -662,7 +682,7 @@
         console.log(receivedData);
       };
     }
-
+    // Logout function.
     function logout() {
       localStorage.removeItem("userDetails");
       window.location.assign("ganesh-finance.html");
@@ -898,5 +918,15 @@
         // }
       });
     });
+
+   
+
+
+    //displaying files
+
+    function displayfile()
+    {
+
+    }
   </script>
 </html>
