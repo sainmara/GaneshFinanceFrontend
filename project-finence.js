@@ -4,6 +4,8 @@ function showLoanDetails(loanaccountnumber) {
   url = `http://localhost:8080/loanAccount/${loanaccountnumber}`;
   xmlhttp1.open("GET", url);
   xmlhttp1.setRequestHeader("content-type", "application/json");
+  var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+  xmlhttp1.setRequestHeader("Authorization", `Bearer ${authToken}`);
   console.log(data);
   xmlhttp1.send();
   xmlhttp1.onload = function () {
@@ -36,7 +38,8 @@ function showLoanDetails(loanaccountnumber) {
       (url = `http://localhost:8080/transaction/${loanaccountnumber}`);
     transactionRequest.open("GET", url);
     transactionRequest.setRequestHeader("content-type", "application/json");
-
+    var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+    transactionRequest.setRequestHeader("Authorization", `Bearer ${authToken}`);
     transactionRequest.send();
     transactionRequest.onload = function () {
       let transactionResponse = JSON.parse(transactionRequest.responseText);
@@ -56,49 +59,48 @@ function showLoanDetails(loanaccountnumber) {
     };
   };
 }
- // Define a function to load and display the PDF
- function loadAndDisplayPDF(fileBytes) {
-  document.getElementById("pdf-container").style.display="block";
-  document.createElement("canvas").innerHTML="";
-// Convert Base64 to Uint8Array
+// Define a function to load and display the PDF
+function loadAndDisplayPDF(fileBytes) {
+  document.getElementById("pdf-container").style.display = "block";
+  document.createElement("canvas").innerHTML = "";
+  // Convert Base64 to Uint8Array
   const pdfData = atob(fileBytes);
   const dataArray = new Uint8Array(pdfData.length);
   for (let i = 0; i < pdfData.length; i++) {
-      dataArray[i] = pdfData.charCodeAt(i);
+    dataArray[i] = pdfData.charCodeAt(i);
   }
 
   // Load the PDF using pdf.js
   pdfjsLib.getDocument(dataArray).promise.then(function (pdfDoc) {
-      // Set up the container for rendering
-      const pdfContainer = document.getElementById("pdf-container");
+    // Set up the container for rendering
+    const pdfContainer = document.getElementById("pdf-container");
 
-      // Loop through all pages and display them
-      for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+    // Loop through all pages and display them
+    for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
       pdfDoc.getPage(pageNum).then(function (page) {
-          // Create a container for each page
-          const pageContainer = document.createElement("div");
-          pageContainer.className = "page-container";
-          
-          // Create a canvas for rendering
-          const canvas = document.createElement("canvas");
-          pageContainer.appendChild(canvas);
-          pdfContainer.appendChild(pageContainer);
+        // Create a container for each page
+        const pageContainer = document.createElement("div");
+        pageContainer.className = "page-container";
 
-          const context = canvas.getContext("2d");
+        // Create a canvas for rendering
+        const canvas = document.createElement("canvas");
+        pageContainer.appendChild(canvas);
+        pdfContainer.appendChild(pageContainer);
 
-          // Display the page on the canvas
-          const viewport = page.getViewport({ scale: 1.0 });
-          canvas.width = viewport.width;
-          canvas.height = viewport.height;
+        const context = canvas.getContext("2d");
 
-          const renderContext = {
+        // Display the page on the canvas
+        const viewport = page.getViewport({ scale: 1.0 });
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        const renderContext = {
           canvasContext: context,
           viewport: viewport,
-          };
+        };
 
-          page.render(renderContext);
+        page.render(renderContext);
       });
-      }
+    }
   });
-  
 }

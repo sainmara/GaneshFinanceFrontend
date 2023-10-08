@@ -274,6 +274,7 @@ td {
         let xmlhttp = new XMLHttpRequest();
         let url =`http://localhost:8080/loanApplication/branch/${branchcode}`;
         xmlhttp.open("GET",url);
+        xmlhttp.setRequestHeader("Authorization", `Bearer ${localstorageData["token"]}`);
         xmlhttp.send();
         xmlhttp.onload=function()
         {
@@ -293,6 +294,8 @@ td {
 
                 }
                 xmlhttp.open("GET",url);
+                var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                 xmlhttp.send();
                 xmlhttp.onload=function()
                 {
@@ -310,6 +313,8 @@ td {
                 let optionSelected=document.getElementById("loanStatus").value;
                 var url= `http://localhost:8080/loanApplication/branch/${branchcode}`;
                 xmlhttp.open("GET",url);
+                var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                 xmlhttp.send();
                 xmlhttp.onload=function()
                 {
@@ -347,6 +352,8 @@ td {
                     {
                         var url= `http://localhost:8080/loanApplication/branch/${branchcode}`;
                         xmlhttp.open("GET",url);
+                        var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                         xmlhttp.send();
                         xmlhttp.onload=function()
                         {
@@ -363,6 +370,8 @@ td {
                         fromdate.value=todate.value;
                         var url= `http://localhost:8080/loanApplication/branch/${branchcode}`;
                         xmlhttp.open("GET",url);
+                        var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                         xmlhttp.send();
                         xmlhttp.onload=function()
                         {
@@ -437,6 +446,8 @@ td {
 
             let xmlhttp = new XMLHttpRequest();
             xmlhttp.open("GET",`http://localhost:8080/loanApplication/number1/${applicationNumber}`);
+            var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
             xmlhttp.send();
             xmlhttp.onload=function()
              {
@@ -564,6 +575,8 @@ td {
 
             let xmlhttp = new XMLHttpRequest();
             xmlhttp.open("GET",`http://localhost:8080/loanApplication/number/${applicationNumber}`);
+            var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
             xmlhttp.send();
             xmlhttp.onload=function()
             {
@@ -618,6 +631,9 @@ td {
 
                         xmlhttp.open("POST","http://localhost:8080/loanApplication/approve");
                         xmlhttp.setRequestHeader("content-type","application/json")
+                        
+                var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                         console.log(sendingData);
                         xmlhttp.send(JSON.stringify(sendingData));
                         xmlhttp.onload=function()
@@ -652,6 +668,8 @@ td {
                 let xmlhttp = new XMLHttpRequest();
                 xmlhttp.open("POST","http://localhost:8080/loanApplication/approve");
                 xmlhttp.setRequestHeader("content-type","application/json")
+                var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                 xmlhttp.send(JSON.stringify(sendingData));
                 xmlhttp.onload=function()
                 {
@@ -715,9 +733,12 @@ td {
         // let xmlhttp = new XMLHttpRequest();
         url =`http://localhost:8080/loanAccount`;
         xmlhttp1.open("POST", url);
+
         let data = JSON.stringify( new loanAccountRequest(role,branch_code,id));
         xmlhttp1.setRequestHeader("content-type", "application/json");
-        console.log(data);
+        var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+            xmlhttp1.setRequestHeader("Authorization", `Bearer ${authToken}`);
+            console.log(data);
         xmlhttp1.send(data);
             
       
@@ -731,11 +752,12 @@ td {
 
 
             let status = "";
+            console.log(data[i])
         switch (data[i].loan_status) {
-            case 0:
+            case 1:
             status = "Ongoing";
             break;
-          case 1:
+          case 0:
             status = "Closed";
             break;
         }

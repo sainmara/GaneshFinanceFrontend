@@ -1,225 +1,210 @@
 <html>
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="project-finance.css">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="project-finance.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      .main {
+        width: 540px;
+        background: #ffffff;
+        padding: 20px 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 60px rgba(1, 0, 5, 0.15);
+      }
 
-        <style>
-                            
-                *{
-                    padding: 0;
-                    margin: 0;
-                    box-sizing: border-box;
-                }
-                .main{
-                    width: 540px;
-                    background: #ffffff;
-                    padding: 20px 25px;
-                    border-radius: 10px;
-                    box-shadow: 0 0 60px rgba(1, 0, 5, 0.15);
+      .main h2 {
+        font-size: 28px;
+        font-weight: 700;
+      }
 
-                }
+      .main .calculator {
+        position: relative;
+        flex-direction: row;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 10px 0px;
+      }
 
-                .main h2{
-                    font-size: 28px;
-                    font-weight: 700;
-                }
+      .calculator .calculator-input {
+        position: relative;
+        width: 50%;
+        justify-content: space-around;
+        padding: 5px 10px;
+        display: block;
+      }
 
-                
+      .calculator .calculator-input input {
+        width: 100%;
+        height: 40px;
+        padding: 20px 14px;
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        font-size: 18px;
+        border: 1px solid #7d7d7d;
+        border-radius: 4px;
+      }
 
-                .main .calculator{
-                    position: relative;
-                    flex-direction: row;
-                    display: flex;
-                    flex-wrap: wrap;
-                    justify-content: space-around;
-                    padding: 10px 0px;
-                }
+      .calculator .calculator-input input:focus {
+        outline: none;
+        border: 1px solid #f4511e;
+      }
 
+      .calculator .calculator-input label {
+        color: #f4511e;
+        font-size: 16px;
+        padding: 2px 4px;
+        font-weight: 500;
+      }
 
-                .calculator .calculator-input{
-                    position: relative;
-                    width: 50%;
-                    justify-content: space-around;
-                    padding: 5px 10px;
-                    display: block;
-                }
+      .calculator .calculator-input button {
+        width: 100%;
+        padding: 14px 16px;
+        margin-top: 20px;
+        font-weight: 700;
+        cursor: pointer;
+        background: orange;
+        border: 0;
+        color: #ffffff;
+        font-size: 14px;
+        text-transform: uppercase;
+        border-radius: 4px;
+      }
+      .main .calculator-result {
+        position: relative;
+        display: block;
+        padding: 10px;
+        margin: 20px 0;
+      }
+      .main .calculator-result ul {
+        width: 100%;
+        background: #ff6f43;
+        padding: 10px 15px;
+        border-radius: 5px;
+      }
 
-                .calculator .calculator-input input{
-                    width: 100%;
-                    height: 40px;
-                    padding: 20px 14px;
-                    font-family: "Poppins",sans-serif;
-                    font-weight: 400;
-                    font-size: 18px;
-                    border: 1px solid #7d7d7d;
-                    border-radius: 4px;
-                }
+      .main .calculator-result li {
+        list-style: none;
+        line-height: 28px;
+        font-weight: 500;
+        font-size: 18px;
+      }
 
-                .calculator .calculator-input input:focus{
-                    outline: none;
-                    border: 1px solid #f4511e;
-                }
+      .calculator-result .loan_emi,
+      .calculator-result .loan_principle,
+      .calculator-result .loan_interest_rate,
+      .calculator-result .loan_total {
+        color: #333332;
+        font-weight: 700;
+        font-size: 22px;
+      }
 
+      .calculator-result canvas {
+        padding: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="heading">
+      <span class="title">Ganesh Finance</span>
+      <div class="options">
+        <span><a href="ganesh-finance.html">Home</a></span>
+        <span><a href="emiCalc.html">EMI Calculator</a></span>
+        <span><a href="ganesh-finance.html">Login</a> </span
+        ><span><a href="register.html">Register</a></span>
+      </div>
+    </div>
+    <div class="main">
+      <h2>EMI Calculator</h2>
 
-                .calculator .calculator-input label{
-                    color:#f4511e;
-                    font-size: 16px;
-                    padding: 2px 4px;
-                    font-weight: 500;
-                }
-
-                .calculator .calculator-input button {
-                    width: 100%;
-                    padding: 14px 16px;
-                    margin-top: 20px;
-                    font-weight: 700;
-                    cursor: pointer;
-                    background: orange;
-                    border: 0;
-                    color: #FFFFFF;
-                    font-size: 14px;
-                    text-transform: uppercase;
-                    border-radius: 4px;
-                }
-                .main .calculator-result{
-                    position: relative;
-                    display: block;
-                    padding: 10px;
-                    margin: 20px 0;
-                }
-                .main .calculator-result ul{
-                    width: 100%;
-                    background: #ff6f43;
-                    padding: 10px 15px;
-                    border-radius: 5px;
-                }
-
-                .main .calculator-result li{
-                    list-style: none;
-                    line-height: 28px;
-                    font-weight: 500;
-                    font-size: 18px;
-                }
-
-
-                .calculator-result .loan_emi,
-                .calculator-result .loan_principle,
-                .calculator-result .loan_interest_rate,
-                .calculator-result .loan_total{
-                    color: #333332;
-                    font-weight: 700;
-                    font-size: 22px;
-                }
-
-                .calculator-result canvas{
-                    padding: 20px;
-                }
-        </style>
-    </head>
-    <body>
-        <div class="heading">
-           <span class="title">Ganesh Finance</span>
-           <div class="options">
-                <span><a href="ganesh-finance.html">Home</a></span>
-                <span><a href="emiCalc.html">EMI Calculator</a></span>
-                <span><a href="login.html">Login</a></span>
-           </div>
+      <div class="calculator">
+        <div class="calculator-input">
+          <label for="">Loan Amount (Rs.):</label>
+          <input type="number" id="loan_amount" />
         </div>
-        <div class="main">
-            
-            <h2>EMI Calculator</h2>
-            
-            <div class="calculator">
-                <div class="calculator-input">
-                    <label for="">Loan Amount (Rs.):</label>
-                    <input type="number" id="loan_amount">
-                </div>
-                <div class="calculator-input">
-                    <label for="">Loan Tenure (Year.):</label>
-                    <input type="number" id="loan_tenure">
-                </div>
-                <div class="calculator-input">
-                    <label for="">Interest Rate (%):</label>
-                    <input type="number" id="loan_interest">
-                </div>
-                <div class="calculator-input">
-                    <button class="calculator-btn">Calculate EMI</button>
-                </div>
-            </div>
-    
-            <div class="calculator-result">
-                <!---Canvas-->
-                <canvas id="loanChart"></canvas>
-                <ul>
-                    <li>Monthly Loan EMI: <span class="loan_emi"></span></li>
-                    <li>Principle Amount: <span class="loan_principle"></span></li>
-                    <li>Loan on Interest: <span class="loan_interest_rate"></span></li>
-                    <li>Total Amount to be paid: <span class="loan_total"></span></li>
-                </ul>
-            </div>
+        <div class="calculator-input">
+          <label for="">Loan Tenure (Year.):</label>
+          <input type="number" id="loan_tenure" />
         </div>
-        
-    </body>
-    <script>
+        <div class="calculator-input">
+          <label for="">Interest Rate (%):</label>
+          <input type="number" id="loan_interest" />
+        </div>
+        <div class="calculator-input">
+          <button class="calculator-btn">Calculate EMI</button>
+        </div>
+      </div>
 
-const loanAmount = document.getElementById("loan_amount");
-const loanTenure = document.getElementById("loan_tenure");
-const loanRate = document.getElementById("loan_interest");
+      <div class="calculator-result">
+        <!---Canvas-->
+        <canvas id="loanChart"></canvas>
+        <ul>
+          <li>Monthly Loan EMI: <span class="loan_emi"></span></li>
+          <li>Principle Amount: <span class="loan_principle"></span></li>
+          <li>Loan on Interest: <span class="loan_interest_rate"></span></li>
+          <li>Total Amount to be paid: <span class="loan_total"></span></li>
+        </ul>
+      </div>
+    </div>
+  </body>
+  <script>
+    const loanAmount = document.getElementById("loan_amount");
+    const loanTenure = document.getElementById("loan_tenure");
+    const loanRate = document.getElementById("loan_interest");
 
-const loanEmi = document.querySelector(".loan_emi");
-const loanPrinciple = document.querySelector(".loan_principle");
-const loanTotal = document.querySelector(".loan_total");
-const loanInterest = document.querySelector(".loan_interest_rate");
+    const loanEmi = document.querySelector(".loan_emi");
+    const loanPrinciple = document.querySelector(".loan_principle");
+    const loanTotal = document.querySelector(".loan_total");
+    const loanInterest = document.querySelector(".loan_interest_rate");
 
+    const submitBtn = document.querySelector(".calculator-btn");
 
+    submitBtn.addEventListener("click", function () {
+      amount = loanAmount.value;
+      tenure = loanTenure.value * 12; // 1Year = 12 months
+      rate = loanRate.value / 12 / 100; // loan rate per year / 100 = loan percentage
 
-const submitBtn = document.querySelector(".calculator-btn");
+      emi = (amount * rate * (1 + rate) ** tenure) / ((1 + rate) ** tenure - 1);
+      //console.log(emi);
+      total = emi * tenure; // total amount to be paid including interest
+      interest = total - amount; // interest = total amount - principle amount
+      // console.log(total);
+      //console.log(interest);
 
-submitBtn.addEventListener("click", function(){
+      loanEmi.innerHTML = Math.floor(emi);
+      loanPrinciple.innerHTML = Math.floor(amount);
+      loanTotal.innerHTML = Math.floor(total);
+      loanInterest.innerHTML = Math.floor(interest);
 
-    amount = loanAmount.value;
-    tenure = (loanTenure.value)*12; // 1Year = 12 months
-    rate = (loanRate.value)/12/100; // loan rate per year / 100 = loan percentage
+      //Loanchart
+      let xValues = ["Principle", "Interest"];
+      let yValues = [amount, Math.floor(interest)];
 
-    emi = ((amount * rate * (1+rate)**tenure)/(((1+rate)**tenure)-1));
-    //console.log(emi);
-    total = emi * tenure; // total amount to be paid including interest
-    interest = total - amount // interest = total amount - principle amount
-   // console.log(total);
-    //console.log(interest);
+      let barColors = ["#f4511e", "#000000"];
 
-    loanEmi.innerHTML = Math.floor(emi);
-    loanPrinciple.innerHTML = Math.floor(amount);
-    loanTotal.innerHTML = Math.floor(total);
-    loanInterest.innerHTML = Math.floor(interest);
-
-
-    //Loanchart
-    let xValues = ["Principle", "Interest"];
-    let yValues = [amount, Math.floor(interest)];
-
-    let barColors = ["#f4511e", "#000000"];
-
-
-    new Chart("loanChart", {
+      new Chart("loanChart", {
         type: "pie",
         data: {
-            labels: xValues,
-            datasets:[{
-                backgroundColor: barColors,
-                data: yValues
-            }]
+          labels: xValues,
+          datasets: [
+            {
+              backgroundColor: barColors,
+              data: yValues,
+            },
+          ],
         },
         // options: {
         //     title: {
         //         display:true,
         //     }
         // }
+      });
     });
-
-
-});
-    </script>
+  </script>
 </html>

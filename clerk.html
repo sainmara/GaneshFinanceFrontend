@@ -29,7 +29,7 @@
   <!-- PDF FILES CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.js"></script>
-  
+
   <head>
     <style>
       #applyLoanTable {
@@ -403,8 +403,7 @@
         <tr>
           <td class="labelApplyLoan">Aadhar PDF</td>
           <td class="inputApplyLoan">
-            <input type="file" id="aadharfile" accept=".pdf"/>
-            
+            <input type="file" id="aadharfile" accept=".pdf" />
           </td>
         </tr>
         <tr>
@@ -423,10 +422,15 @@
     </div>
     <!-- dialog for apply loan end-->
 
-    <embed id="displayfiles" src="#" type="application/pdf" style="display: none; width: 100%; height: 500px;"> 
+    <embed
+      id="displayfiles"
+      src="#"
+      type="application/pdf"
+      style="display: none; width: 100%; height: 500px"
+    />
 
     <!-- emi calculator part start -->
-    
+
     <div class="main" id="emicalc">
       <h2>EMI Calculator</h2>
 
@@ -449,7 +453,6 @@
       </div>
 
       <div class="calculator-result">
-        
         <canvas id="loanChart"></canvas>
         <ul>
           <li>Monthly Loan EMI: <span class="loan_emi"></span></li>
@@ -485,7 +488,7 @@
     }
 
     function applyLoan() {
-           // function applyLoanRequest(
+      // function applyLoanRequest(
       //   clerk_id,
       //   customer_id,
       //   loan_type,
@@ -494,7 +497,7 @@
       //   roi,
       //   requested_amount,
       //   files
-        
+
       // ) {
       //   let formdta=new FormData();
       //   this.clerk_id = clerk_id;
@@ -507,61 +510,80 @@
       //   this.formdata=formdta.append('file',files);
       // }
 
-        //doc data
+      //doc data
 
       let fileInput = document.getElementById("aadharfile");
-        
 
-      const files=fileInput.files[0];
+      const files = fileInput.files[0];
       let ele = document.getElementById("inputCustomerId");
       let customerIDRequest = new XMLHttpRequest();
       let customerIDurl = `http://localhost:8080/Authentication/customer/${ele.value}`;
       let customerID = "";
       customerIDRequest.open("GET", customerIDurl);
+      var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+      customerIDRequest.setRequestHeader(
+        "Authorization",
+        `Bearer ${authToken}`
+      );
       customerIDRequest.send();
       customerIDRequest.onload = function () {
         customerID = JSON.parse(customerIDRequest.responseText).customer_id;
 
+        let formdata = new FormData();
 
-        let formdata=new FormData();
-
-        formdata.append('file',files);
-        formdata.append('type1','aadhar');
-        formdata.append('clerk_id',document.getElementById("inputClerkId").value);
-        formdata.append('customerid',customerID);
-        formdata.append('loantype',document.getElementById("inputLoanType").value);
-        formdata.append('applicationstatus',0);
-        formdata.append('loantenure',document.getElementById("inputLoanTenure").value);
-        formdata.append('roi', document.getElementById("inputRoi").value);
-        formdata.append('requestedamount', document.getElementById("inputRequestedAmount").value);
+        formdata.append("file", files);
+        formdata.append("type1", "aadhar");
+        formdata.append(
+          "clerk_id",
+          document.getElementById("inputClerkId").value
+        );
+        formdata.append("customerid", customerID);
+        formdata.append(
+          "loantype",
+          document.getElementById("inputLoanType").value
+        );
+        formdata.append("applicationstatus", 0);
+        formdata.append(
+          "loantenure",
+          document.getElementById("inputLoanTenure").value
+        );
+        formdata.append("roi", document.getElementById("inputRoi").value);
+        formdata.append(
+          "requestedamount",
+          document.getElementById("inputRequestedAmount").value
+        );
 
         //console.log(request);
         let xmlhttp = new XMLHttpRequest();
         let url = "http://localhost:8080/loanApplication/apply";
         xmlhttp.open("POST", url);
-       // xmlhttp.setRequestHeader("content-type", "application/json");
+        var authToken = JSON.parse(localStorage.getItem("userDetails"))[
+          "token"
+        ];
+        xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
+        // xmlhttp.setRequestHeader("content-type", "application/json");
         xmlhttp.send(formdata);
         xmlhttp.onload = function () {
           // let responseText = xmlhttp.responseText;
           // console.log(JSON.parse(responseText));
         };
       };
-
-
     } // close applyloan method
 
-    //fetching loan application details onload and siaplaying 
+    //fetching loan application details onload and siaplaying
     let user = JSON.parse(localStorage.getItem("userDetails"));
     let branchcode = user.branchCode;
     let xmlhttp = new XMLHttpRequest();
     let url = `http://localhost:8080/loanApplication/branch/${branchcode}`;
     xmlhttp.open("GET", url);
+    var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+    xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
     xmlhttp.send();
     xmlhttp.onload = function () {
       let data = JSON.parse(xmlhttp.responseText);
       showData(data, "tabdata");
     };
-    
+
     //Updating the table based on loan type.
     function updateTable() {
       let user = JSON.parse(localStorage.getItem("userDetails"));
@@ -573,6 +595,8 @@
         url = `http://localhost:8080/loanApplication/branch/${branchcode}`;
       }
       xmlhttp.open("GET", url);
+      var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+      xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
       xmlhttp.send();
       xmlhttp.onload = function () {
         let tableData = JSON.parse(xmlhttp.responseText);
@@ -673,6 +697,8 @@
       let url = "http://localhost:8080/loanApplication/cancel";
 
       xmlhttp.open("POST", url);
+      var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+      xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
       xmlhttp.setRequestHeader("content-type", "application/json");
 
       xmlhttp.send(JSON.stringify(sendingData));
@@ -704,6 +730,8 @@
     // let xmlhttp = new XMLHttpRequest();
     url = `http://localhost:8080/loanAccount`;
     xmlhttp1.open("POST", url);
+    var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+    xmlhttp1.setRequestHeader("Authorization", `Bearer ${authToken}`);
     let data = JSON.stringify(new loanAccountRequest(role, branch_code, id));
     xmlhttp1.setRequestHeader("content-type", "application/json");
     console.log(data);
@@ -718,10 +746,10 @@
       for (var i = 0; i < data.length; i++) {
         let status = "";
         switch (data[i].loan_status) {
-          case 0:
+          case 1:
             status = "Ongoing";
             break;
-          case 1:
+          case 0:
             status = "Closed";
             break;
         }
@@ -757,6 +785,10 @@
         if (fromdate.value && todate.value) {
           var url = `http://localhost:8080/loanApplication/branch/${branchcode}`;
           xmlhttp.open("GET", url);
+          var authToken = JSON.parse(localStorage.getItem("userDetails"))[
+            "token"
+          ];
+          xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
           xmlhttp.send();
           xmlhttp.onload = function () {
             let tableData = JSON.parse(xmlhttp.responseText);
@@ -775,6 +807,10 @@
           fromdate.value = todate.value;
           var url = `http://localhost:8080/loanApplication/branch/${branchcode}`;
           xmlhttp.open("GET", url);
+          var authToken = JSON.parse(localStorage.getItem("userDetails"))[
+            "token"
+          ];
+          xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
           xmlhttp.send();
           xmlhttp.onload = function () {
             let tableData = JSON.parse(xmlhttp.responseText);
@@ -795,6 +831,8 @@
       let optionSelected = document.getElementById("loanStatus").value;
       var url = `http://localhost:8080/loanApplication/branch/${branchcode}`;
       xmlhttp.open("GET", url);
+      var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+      xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
       xmlhttp.send();
       xmlhttp.onload = function () {
         let tableData = JSON.parse(xmlhttp.responseText);
@@ -822,6 +860,8 @@
       let xmlhttp = new XMLHttpRequest();
       let url = `http://localhost:8080/Authentication/customer/${ele.value}`;
       xmlhttp.open("GET", url);
+      var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+      xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
       xmlhttp.send();
       xmlhttp.onload = function () {
         let responseText = xmlhttp.responseText;
@@ -842,6 +882,8 @@
 
       let xmlhttp = new XMLHttpRequest();
       xmlhttp.open("GET", `http://localhost:8080/loantype`);
+      var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+      xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
       xmlhttp.send();
       xmlhttp.onload = function () {
         let receivedData = JSON.parse(xmlhttp.responseText);
@@ -919,14 +961,8 @@
       });
     });
 
-   
-
-
     //displaying files
 
-    function displayfile()
-    {
-
-    }
+    function displayfile() {}
   </script>
 </html>
