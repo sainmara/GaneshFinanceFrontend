@@ -768,12 +768,12 @@ td {
                 xmlhttp.onload=function()
                 {
                     d=JSON.parse(xmlhttp.responseText);
-                    // console.log(d["email"]);    
-
+                     console.log(d);    
+                    console.log(d["loanaplicationnumber"]);
                      //content of the email body
                      var contentemailbody=`Hello ${d["customername"]},
 
-                    Sorry to inform your loan application ${d["loanapplicationnumber"]} has been Rejected.
+                    Sorry to inform your loan application ${d["loanaplicationnumber"]} has been Rejected.
                     
                     Reason:${rejectreason}
 
