@@ -1,0 +1,194 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script src="loginRegister.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <link rel="stylesheet" href="project-finance.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- sweetalerts js files-->
+    <!-- Include SweetAlert CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.min.css"
+    />
+    <style>
+      .header {
+        background-color: #ffa500;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .services {
+        display: flex;
+        justify-content: space-around;
+      }
+
+      .service-box {
+        background-color: #000;
+        color: #ffa500;
+        padding: 10px 20px;
+
+        border-radius: 5px;
+      }
+
+      .ganesh-image {
+        width: 30%;
+        float: left;
+        margin: 20px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .prompt {
+        width: 70%;
+        float: left;
+        padding: 20px;
+      }
+
+      .container {
+        overflow: hidden;
+      }
+
+      h1,
+      h2 {
+        color: #ffa500;
+      }
+    </style>
+
+    <!-- Include SweetAlert JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.3.0/dist/sweetalert2.min.js"></script>
+
+    <script>
+      var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
+      if (localStorage.getItem("userDetails") != null) {
+        console.log("ok");
+        if (localstorageData["role"] == 2) {
+          window.location.assign("customer.html");
+        }
+        window.location.assign(
+          localstorageData["role"] == 0 ? "manager.html" : "clerk.html"
+        );
+      }
+    </script>
+  </head>
+
+  <body>
+    <div class="heading">
+      <span class="title">Ganesh Finance</span>
+      <div class="options">
+        <span><a href="home.html">Home</a></span>
+        <span><a href="emiCalc.html">EMI Calculator</a></span>
+        <span><a href="ganesh-finance.html">Login</a></span>
+        <span><a href="register.html">Register</a></span>
+      </div>
+    </div>
+    <div id="home">
+      <div class="header">
+        <div class="services">
+          <div class="service-box">
+            <i
+              class="fa-solid fa-droplet fa-xxl"
+              style="
+                color: #ffffff;
+                font-size: 32px;
+                padding-top: 4px;
+                margin-bottom: 2px;
+              "
+            ></i>
+            <br />Easy Loan Apply
+          </div>
+          <div class="service-box">
+            <i
+              class="fa-solid fa-bolt-lightning fa-xxl"
+              style="
+                color: #ffffff;
+                font-size: 32px;
+                padding-top: 4px;
+                margin-bottom: 2px;
+              "
+            ></i>
+            <br />Simple Approvals
+          </div>
+          <div class="service-box">
+            <i
+              class="fa-solid fa-indian-rupee-sign fa-xxl"
+              style="
+                color: #ffffff;
+                font-size: 32px;
+                padding-top: 4px;
+                margin-bottom: 2px;
+              "
+            ></i>
+            <br />Quick Withdrawals
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <img src="ganesh.jpg" alt="Ganesh Image" class="ganesh-image" />
+        <div class="prompt">
+          <h1>Welcome to Ganesh Finance</h1>
+          <p>
+            Welcome to Ganesh Finance, your dedicated partner in financial
+            success. At Ganesh Finance, we understand that every financial
+            journey is unique, and that's why we offer tailor-made solutions to
+            meet your specific needs. Whether you're dreaming of owning a home,
+            expanding your business, pursuing higher education, or simply need
+            some extra funds, we are here to support you at every step of the
+            way.
+          </p>
+          <p>
+            Our commitment lies in providing you with seamless and hassle-free
+            financial services. With our easy-to-use online platform, you can
+            apply for loans effortlessly, ensuring that you get the financial
+            assistance you require without any complexities. We pride ourselves
+            on our transparent application process, ensuring that you are aware
+            of every detail throughout your loan application journey.
+          </p>
+          <p>
+            What sets Ganesh Finance apart is not just our services but also our
+            dedicated team of financial experts. Our experienced professionals
+            are always ready to listen, understand your unique requirements, and
+            guide you towards the best financial solutions. We believe in
+            building lasting relationships with our clients, fostering trust and
+            reliability that you can count on.
+          </p>
+          <h2>Our Vision</h2>
+          <p>
+            Ganesh Finance envisions a future where financial aspirations are
+            achievable for everyone. We strive to empower individuals and
+            businesses by providing accessible, affordable, and innovative
+            financial products. Through our unwavering commitment to customer
+            satisfaction and ethical practices, we aim to become a beacon of
+            trust in the financial industry.
+          </p>
+          <h2>Contact Us</h2>
+          <p>
+            Ready to embark on your financial journey with Ganesh Finance? Feel
+            free to reach out to us at any time. Our customer support team is
+            available 24/7 to assist you with any queries you may have. Your
+            financial dreams are just a step away – let Ganesh Finance be your
+            guiding light towards a brighter and more prosperous future.
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
