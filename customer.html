@@ -516,6 +516,22 @@ td {
       xmlhttp.send(formdata);
       console.log(formdata);
       xmlhttp.onload = function () {
+        if(xmlhttp.status == 200){
+          Swal.fire({
+                title:`Applied`,
+                text: "",
+                icon:"success",
+                confirmButtonText: `OK`,
+                confirmButtonColor:"orange",
+            
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    
+                  window.location.assign("customer.html");
+                   
+                } 
+                })
+        }
       };
 
     }// close applyloan method
@@ -594,9 +610,9 @@ td {
             break;
         }
 
-        var ele = `<tr id=${data[i].loan_application_number}><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td> `;
+        var ele = `<tr id=${data[i].loan_application_number}><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td><td></td> `;
         if (!data[i].application_status) {
-          ele += ` <td> <button type="button" class="btn btn-primary" id="apply"  onclick="cancelLoan('${data[i].loan_application_number}',${localstorageData["role"]},'${localstorageData["id"]}')">Cancel Loan</button> </td></tr>`;
+          ele += ` <td> <button type="button" class="btn logoutbtn" id="apply"  onclick="cancelLoan('${data[i].loan_application_number}',${localstorageData["role"]},'${localstorageData["id"]}')">Cancel Loan</button> </td></tr>`;
         } else if(data[i].application_status== 3)  {
           ele += `<td>Cancelled</td></tr>`;
         }
