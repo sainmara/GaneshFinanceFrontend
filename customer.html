@@ -419,12 +419,29 @@ td {
   </div>
  </body>
   <script>
-    if (localStorage.getItem("userDetails") != null) {
-      var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
-      document.getElementById(
-        "uname"
-      ).innerHTML = `${localstorageData["username"]}`;
-    }
+
+      if (localStorage.getItem("userDetails") != null) {
+            var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
+
+            if (localstorageData["role"] == 2) {
+              var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
+              document.getElementById(
+                "uname"
+              ).innerHTML = `${localstorageData["username"]}`;
+            } else {
+              window.location.assign(
+                localstorageData["role"] == 0 ? "manager.html" : "clerk.html"
+              );
+            }
+      } else {
+      window.location.assign("login.html");
+      }
+    // if (localStorage.getItem("userDetails") != null) {
+    //   var localstorageData = JSON.parse(localStorage.getItem("userDetails"));
+    //   document.getElementById(
+    //     "uname"
+    //   ).innerHTML = `${localstorageData["username"]}`;
+    // }
 
     function applyLoanDialog() {
      
@@ -734,8 +751,8 @@ td {
                         var url= `http://localhost:8080/loanApplication/customer/${id}`;
                         xmlhttp.open("GET",url);
                         
-      var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
-            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
+                        var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+                        xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                         xmlhttp.send();
                         xmlhttp.onload=function()
                         {
@@ -764,7 +781,11 @@ td {
 
               let optionSelected = document.getElementById("loanStatus").value;
               var url= `http://localhost:8080/loanApplication/customer/${id}`;
+
+             
                         xmlhttp.open("GET",url);
+                        var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+                        xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                         xmlhttp.send();
                         xmlhttp.onload=function()
                         {

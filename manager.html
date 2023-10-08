@@ -18,6 +18,19 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.js"></script>
         
+
+        <!--Email sending CDN -->
+        <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+        </script>
+        <!-- Initializing the emailjs for sending emails -->
+        <script type="text/javascript">
+
+            (function(){
+               emailjs.init("mXFPd7aq8rqS_MB-c");
+            })();
+        </script>
+
         <style>
 
             
@@ -537,37 +550,84 @@ td {
             if(code ==1)
             {
                 text="Approve";
-            }
-            else{
-                text="Reject";
-            }
-            Swal.fire({
+                Swal.fire({
                 title:`Confirm ${text}?`,
                 text: "",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: `Yes, ${text} it!`,
                 cancelButtonText: 'No, cancel!',
+                confirmButtonColor:"orange",
+                cancelButtonColor:"black"
             
                 }).then((result) => {
                 if (result.isConfirmed) {
-                    if(code== 1)
-                    {
+                    
                         console.log(code);
                         approveLoan(applicationNumber);
-                        
-                    }else{
-                     rejectLoan(applicationNumber);
-                     
-                    }
+                   
                 } else if (
                     /* Read more about handling dismissals below */
                     result.dismiss === Swal.DismissReason.cancel
                 ) {
-                    console.log("Cancceled");
+                    console.log("Cancel");
                 }
                 })
             }
+            else{
+                text="Reject";
+                Swal.fire({
+                title:`Confirm ${text}?`,
+                text: "Reject Remarks",
+                input: 'select',
+                inputOptions: {
+                    reason1: 'Inaccurate Details in Application',
+                    reason2: 'Not Eligible',
+                    reason3: 'Insufficient Documents',
+                    reason4: 'Low Income'
+                },
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: `Yes, ${text} it!`,
+                confirmButtonColor:"orange",
+                cancelButtonColor:"black",
+                cancelButtonText: 'No, cancel!',
+            
+                }).then((result) => {
+                if (result.isConfirmed) {
+                   
+                    var rejectreason="";
+                    if(result.value=="reason1")
+                    {
+                        rejectreason='Inaccurate Details in Application';
+                    }
+                    else if(result.value == "reason2")
+                    {
+                        rejectreason='Not Eligible';   
+                    }
+                    else if(result.value =="reason3")
+                    {
+                        rejectreason='Insuffiecient Documents Provided';
+                    }
+                    else if(result.value=="reason4")
+                    {
+                        rejectreason="Low Income";
+                    }
+                   
+                     rejectLoan(applicationNumber,rejectreason);
+                  
+                     
+                    
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    console.log("Cancel");
+                }
+                })
+            }
+            
+        }
             function approveLoan(applicationNumber){
             //setting the errormessages empty
             document.getElementById("errmsgSAmount").innerHTML="";
@@ -626,27 +686,61 @@ td {
 
                         // packing the data into approvalrequest object..
                         let sendingData=new ApprovalRequest(role,approvalCode,customerID,managerId,loan_application_number,loan_type,loanStatus,loan_tenure,disbursedAmount,sanctionedAmount,emi,roi);
-                        
-                        //commented the code becasue no need to approve all the loans because checking other functonaloties related to dialog box
 
                         xmlhttp.open("POST","http://localhost:8080/loanApplication/approve");
                         xmlhttp.setRequestHeader("content-type","application/json")
                         
-                var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
-            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
+                        var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
+                        xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                         console.log(sendingData);
                         xmlhttp.send(JSON.stringify(sendingData));
                         xmlhttp.onload=function()
                         {
-                            console.log(JSON.stringify(xmlhttp.responseText));
+
+                            //need to write an api call for getting customer email id
+
+                            let d=JSON.parse(xmlhttp.responseText);
+                            // console.log(d);
+                            // console.log(d["email"]);
+
+                            //content of the email body
+                            var contentemailbody=`Hello ${d["customername"]},
+
+                                    Your loan application ${d["loanAccount"].loan_application_number} has been approved.
+
+                                    For further details please log in to the website.
+
+                                    http://127.0.0.1:5501/ganesh-finance.html
+
+                                    Best wishes,
+                                    GaneshFinance team`;
+                            //
+                            var infooforemailsending={
+                                   
+                                    email:`${d["email"]}`,
+                                    message:contentemailbody
+                            };
+                                // the below two variables are fixed as these are got from emailjs
+                                const serviceID="service_vrg4dvs";
+                                const templateID="template_d6erdl9";
+                                emailjs.send(serviceID,templateID,infooforemailsending)
+                                .then(
+                                    res =>{
+                                    console.log(res);
+                                    
+                                    }
+                                ).catch((err) =>console.log(err));
+                                
+                            
                             document.getElementById("btnArea").style.display="none";
+                                
                         }
                         
                     }
                 }
             }
         }
-        function rejectLoan(applicationNumber)
+        function rejectLoan(applicationNumber,rejectreason)
         {
                 let storedData=JSON.parse(localStorage.getItem("userDetails"));
                 let loan_application_number=applicationNumber;
@@ -669,11 +763,44 @@ td {
                 xmlhttp.open("POST","http://localhost:8080/loanApplication/approve");
                 xmlhttp.setRequestHeader("content-type","application/json")
                 var  authToken= JSON.parse(localStorage.getItem("userDetails"))["token"];
-            xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
+                xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
                 xmlhttp.send(JSON.stringify(sendingData));
                 xmlhttp.onload=function()
                 {
-                    console.log(JSON.stringify(xmlhttp.responseText));
+                    d=JSON.parse(xmlhttp.responseText);
+                    // console.log(d["email"]);    
+
+                     //content of the email body
+                     var contentemailbody=`Hello ${d["customername"]},
+
+                    Sorry to inform your loan application ${d["loanapplicationnumber"]} has been Rejected.
+                    
+                    Reason:${rejectreason}
+
+                    For further details please log in to the website.
+
+                    http://127.0.0.1:5501/ganesh-finance.html
+
+                    Best wishes,
+                    GaneshFinance team`;
+                    
+                    //object creating to send for emailjs
+                    var infooforemailsending={
+                                   
+                                   email:`${d["email"]}`,
+                                   message:contentemailbody
+                           };
+                               // the below two variables are fixed as these are got from emailjs
+                    const serviceID="service_vrg4dvs";
+                    const templateID="template_d6erdl9";
+                    emailjs.send(serviceID,templateID,infooforemailsending)
+                    .then(
+                        res =>{
+                           console.log(res);
+                       }
+                    ).catch((err) =>console.log(err));       
+            
+                    //hiding the approve rejct button
                     document.getElementById("btnArea").style.display="none";
                 }
 
