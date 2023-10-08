@@ -59,6 +59,23 @@ function showLoanDetails(loanaccountnumber) {
     };
   };
 }
+
+function ViewDocument(loan_application_number) {
+  let xmlhttp = new XMLHttpRequest();
+  xmlhttp.open(
+    "GET",
+    `http://localhost:8080/loanApplication/number1/${loan_application_number}`
+  );
+  var authToken = JSON.parse(localStorage.getItem("userDetails"))["token"];
+  xmlhttp.setRequestHeader("Authorization", `Bearer ${authToken}`);
+  xmlhttp.send();
+  xmlhttp.onload = function () {
+    let data = JSON.parse(xmlhttp.responseText);
+    let fileBytes = data.fileBytes;
+    loadAndDisplayPDF(fileBytes);
+  };
+}
+
 // Define a function to load and display the PDF
 function loadAndDisplayPDF(fileBytes) {
   document.getElementById("pdf-container").style.display = "block";

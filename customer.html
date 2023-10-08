@@ -41,6 +41,20 @@
         display: none;
       }
 
+      #pdf-container
+            {
+                display: none;
+                position: absolute;
+                margin: auto;
+                top: 50px;
+                left:200px;
+                z-index: 10;
+                height: 500px;
+                overflow-y: auto;
+                border: 1px solid;
+
+            }
+
       
 .labelApplyLoan {
   color: #b4886b;
@@ -296,6 +310,13 @@ td {
           <tbody id="tabdata"></tbody>
         </table>
       </div>
+    </div>
+
+    
+    <div id="pdf-container">
+      <div class="clspdf"> 
+          <button  type="button" class="btn-close" aria-label="Close" onclick="closePdf()"></button>
+          </div>
     </div>
     <div id="loanaccount">
       <table class="table table-bordered">
@@ -610,7 +631,7 @@ td {
             break;
         }
 
-        var ele = `<tr id=${data[i].loan_application_number}><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td><td></td> `;
+        var ele = `<tr id=${data[i].loan_application_number}><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td><td><button type="button" class="btn logoutbtn" id="viewDocument"  onclick="ViewDocument('${data[i].loan_application_number}')">Document</button> </td> `;
         if (!data[i].application_status) {
           ele += ` <td> <button type="button" class="btn logoutbtn" id="apply"  onclick="cancelLoan('${data[i].loan_application_number}',${localstorageData["role"]},'${localstorageData["id"]}')">Cancel Loan</button> </td></tr>`;
         } else if(data[i].application_status== 3)  {
@@ -643,6 +664,12 @@ td {
 
 
     }
+
+    function closePdf()
+            {
+                document.getElementById("pdf-container").style.display="none";
+            }
+            
 
     /* Cancel loan part*/
 

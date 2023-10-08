@@ -39,6 +39,18 @@
         margin-top: 100px;
       }
 
+      #pdf-container {
+        display: none;
+        position: absolute;
+        margin: auto;
+        top: 50px;
+        left: 200px;
+        z-index: 10;
+        height: 500px;
+        overflow-y: auto;
+        border: 1px solid;
+      }
+
       table {
         border-collapse: collapse;
       }
@@ -312,6 +324,18 @@
         </table>
       </div>
     </div>
+
+    <div id="pdf-container">
+      <div class="clspdf">
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          onclick="closePdf()"
+        ></button>
+      </div>
+    </div>
+
     <div id="loanaccount">
       Loan Account
 
@@ -564,11 +588,26 @@
         // xmlhttp.setRequestHeader("content-type", "application/json");
         xmlhttp.send(formdata);
         xmlhttp.onload = function () {
-          // let responseText = xmlhttp.responseText;
-          // console.log(JSON.parse(responseText));
+          if (xmlhttp.status == 200) {
+            Swal.fire({
+              title: `Applied`,
+              text: "",
+              icon: "success",
+              confirmButtonText: `OK`,
+              confirmButtonColor: "orange",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.assign("customer.html");
+              }
+            });
+          }
         };
       };
     } // close applyloan method
+
+    function closePdf() {
+      document.getElementById("pdf-container").style.display = "none";
+    }
 
     //fetching loan application details onload and siaplaying
     let user = JSON.parse(localStorage.getItem("userDetails"));
@@ -649,9 +688,9 @@
             break;
         }
 
-        var ele = `<tr id=${data[i].loan_application_number}><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td> `;
+        var ele = `<tr id=${data[i].loan_application_number}><td> ${data[i].loan_application_number}</td><td> ${data[i].requested_amount}</td><td> ${data[i].application_date}</td> <td> ${type}</td><td> ${status}</td> <td><button type="button" class="btn logoutbtn" id="viewDocument"  onclick="ViewDocument('${data[i].loan_application_number}')">Document</button> </td> `;
         if (!data[i].application_status) {
-          ele += ` <td> <button type="button" class="btn btn-primary" id="apply"  onclick="cancelLoan('${data[i].loan_application_number}',${localstorageData["role"]},'${localstorageData["id"]}')">Cancel Loan</button> </td></tr>`;
+          ele += ` <td> <button type="button" class="btn logoutbtn" id="apply"  onclick="cancelLoan('${data[i].loan_application_number}',${localstorageData["role"]},'${localstorageData["id"]}')">Cancel Loan</button> </td></tr>`;
         } else if (data[i].application_status == 3) {
           ele += `<td>Cancelled</td></tr>`;
         } else {
