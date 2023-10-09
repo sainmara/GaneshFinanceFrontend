@@ -639,7 +639,7 @@ td {
                         <td>${applicationData.application_date}</td>
                         <td>${applicationData.loan_tenure}</td>
                         <td>${applicationData.roi}</td>
-                        <td onclick=" loadAndDisplayPDF('${applicationData.fileBytes}')">View Docs</td>
+                        <td><button type="button" class="btn logoutbtn" id="viewDocument"  onclick=" loadAndDisplayPDF('${applicationData.fileBytes}')">Document</button> </td>
                     </tr>
                 </tbody>
             </table>
