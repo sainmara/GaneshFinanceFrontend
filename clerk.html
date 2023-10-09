@@ -1077,7 +1077,7 @@
     function calcEMI() {
       let amount = document.getElementById("inputRequestedAmount").value;
       let roi = document.getElementById("inputRoi").value;
-      let tenure = document.getElementById("inputLoanTenure").value * 12;
+      let tenure = document.getElementById("inputLoanTenure").value ;
       let rate = roi / 12 / 100; // loan rate per year / 100 = loan percentage
 
       emi = (amount * rate * (1 + rate) ** tenure) / ((1 + rate) ** tenure - 1);
